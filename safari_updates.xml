@@ -10,11 +10,11 @@
                 <key>Developer Identifier</key>
                 <string>N33TQXN8C7</string>
                 <key>CFBundleVersion</key>
-                <string>2.7.0</string>
+                <string>2.7.1</string>
                 <key>CFBundleShortVersionString</key>
-                <string>2.7.0</string>
+                <string>2.7.1</string>
                 <key>URL</key>
-                <string>https://github.com/AdguardTeam/AdguardBrowserExtension/releases/download/v2.7.0-beta/safari-beta-2.7.0.safariextz</string>
+                <string>https://github.com/AdguardTeam/AdguardBrowserExtension/releases/download/v2.7.1-beta/safari-beta-2.7.1.safariextz</string>
             </dict>
         </array>
     </dict>

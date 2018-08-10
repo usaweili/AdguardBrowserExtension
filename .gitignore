@@ -3,3 +3,4 @@ Build/
 deploy/
 target/
 *.iml
+node_modules/

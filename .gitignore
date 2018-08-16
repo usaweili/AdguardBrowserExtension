@@ -4,3 +4,4 @@ deploy/
 target/
 *.iml
 node_modules/
+private/

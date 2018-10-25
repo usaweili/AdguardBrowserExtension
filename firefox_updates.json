@@ -3,8 +3,8 @@
     "adguardadblockerbeta@adguard.com": {
       "updates": [
         {
-          "version": "2.10.12",
-          "update_link": "https://github.com/AdguardTeam/AdguardBrowserExtension/releases/download/v2.10.12/firefox-standalone-beta-2.10.12.xpi",
+          "version": "2.10.13",
+          "update_link": "https://github.com/AdguardTeam/AdguardBrowserExtension/releases/download/v2.10.13/firefox-standalone-beta-2.10.13.xpi",
           "applications": {
             "gecko": {
               "strict_min_version": "51.0"

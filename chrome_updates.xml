@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
     <app appid='dpmeohoalepcppnhfkedkinjfojifjdc'>
-        <updatecheck codebase='https://github.com/AdguardTeam/AdguardBrowserExtension/releases/download/v3.2.0/chrome-standalone-beta-3.2.0.crx' version='3.2.0'/>
+        <updatecheck codebase='https://github.com/AdguardTeam/AdguardBrowserExtension/releases/download/v3.2.1/chrome-standalone-beta-3.2.1.crx' version='3.2.1'/>
     </app>
 </gupdate>

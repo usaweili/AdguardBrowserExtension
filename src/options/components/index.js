@@ -1,0 +1,9 @@
+export { default as About } from './About';
+export { default as Filters } from './Filters';
+export { default as General } from './General';
+export { default as Miscellaneous } from './Miscellaneous';
+export { default as Stealth } from './Stealth';
+export { default as UserFilter } from './UserFilter';
+export { default as Whitelist } from './Whitelist';
+export { default as Footer } from './Footer/Footer';
+export { default as Sidebar } from './Sidebar/Sidebar';

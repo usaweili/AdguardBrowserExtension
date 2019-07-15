@@ -1,0 +1,24 @@
+.nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &__item {
+        color: var(--gray-base);
+        text-decoration: none;
+        display: inline-block;
+        margin-bottom: 50px;
+        padding-bottom: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: var(--t3) box-shadow;
+
+        &:hover {
+            box-shadow: 0 2px 0 0 var(--green86);
+        }
+
+        &--active {
+            box-shadow: 0 2px 0 0 var(--green86);
+        }
+    }
+}

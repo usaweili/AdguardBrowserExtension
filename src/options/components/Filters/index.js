@@ -35,7 +35,7 @@ class Filters extends Component {
         }
         if (filtersData) {
             this.setState(state => ({
-                ...state, filtersData,
+                ...state, ...filtersData,
             }));
         }
     }
@@ -44,12 +44,30 @@ class Filters extends Component {
         console.log(e.target.value);
     };
 
-    handleGroupSwitch = ({ id, data }) => {
-        console.log(id, data);
+    handleGroupSwitch = async ({ id, data }) => {
+        const { groups } = this.state;
+
+        try {
+            await browser.runtime.sendMessage({ type: 'updateGroupStatus', id, value: data });
+        } catch (e) {
+            console.log(e);
+        }
+
+        const group = groups[id];
+        this.setState(state => ({
+            ...state,
+            groups: {
+                ...groups,
+                [id]: {
+                    ...group,
+                    enabled: data,
+                },
+            },
+        }));
     };
 
     getEnabledFiltersByGroup = (group) => {
-        const { filters } = this.state.filtersData;
+        const { filters } = this.state;
         return group.filters.map((filterId) => {
             const { enabled, name } = filters[filterId];
             return enabled && name;
@@ -65,6 +83,7 @@ class Filters extends Component {
                     key={group.id}
                     {...group}
                     enabledFilters={enabledFilters}
+                    onClick={this.groupClickHandler}
                 >
                     <Checkbox
                         id={group.id}
@@ -77,7 +96,7 @@ class Filters extends Component {
     };
 
     render() {
-        const { filtersData: { groups } } = this.state;
+        const { groups }  = this.state;
         return (
             <Fragment>
                 <h2 className="title">Filters</h2>

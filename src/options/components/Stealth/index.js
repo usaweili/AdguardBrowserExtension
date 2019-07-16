@@ -8,7 +8,6 @@ const STEALTH_SETTINGS = {
     sections: {
         stealthModeSection: {
             id: 'stealthModeSection',
-            title: 'Stealth Mode',
             sets: ['stealthMode'],
         },
         cookiesSection: {
@@ -176,7 +175,7 @@ class Stealth extends Component {
         const { settings } = this.state;
         return (
             <Fragment>
-                <h2 className="title">Settings</h2>
+                <h2 className="title">Stealth Mode</h2>
                 {settings
                 && this.renderSections()}
             </Fragment>

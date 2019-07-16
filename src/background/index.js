@@ -25,6 +25,7 @@ let settings = {
     removeClientData: { id: 'removeClientData', value: true },
     blockWebrtc: { id: 'blockWebrtc', value: false },
     stripTrackingParams: { id: 'stripTrackingParams', value: true },
+    invertWhitelist: { id: 'invertWhitelist', value: false },
 };
 
 const APP_VERSION = '3.2.2';

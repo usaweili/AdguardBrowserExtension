@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './group.pcss';
 
 const renderEnabledFilters = (enabledFiltersNames) => {
     const SLICE_POINT = 3;
@@ -26,13 +25,13 @@ const renderEnabledFilters = (enabledFiltersNames) => {
 function Group(props) {
     const { name, children, enabledFilters } = props;
     return (
-        <div className="group">
-            <div className="group__info">
-                <div className="group__icon" />
-                <div className="group__title">
+        <div className="setting">
+            <div className="setting__info">
+                <div className="setting__icon" />
+                <div className="setting__title">
                     {name}
                 </div>
-                <div className="group__enabled_filters">
+                <div className="setting__desc">
                     {renderEnabledFilters(enabledFilters)}
                 </div>
                 {children}

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './setting.pcss';
 
 function SettingsSet(props) {
     const { title, description, children } = props;

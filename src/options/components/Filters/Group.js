@@ -24,9 +24,11 @@ const renderEnabledFilters = (enabledFiltersNames) => {
 };
 
 function Group(props) {
-    const { name, children, enabledFilters } = props;
+    const {
+        name, children, enabledFilters, groupClickHandler,
+    } = props;
     return (
-        <div className="group">
+        <div className="group" role="presentation" onClick={groupClickHandler}>
             <div className="group__info">
                 <div className="group__icon" />
                 <div className="group__title">
@@ -49,6 +51,7 @@ Group.propTypes = {
     name: PropTypes.string.isRequired,
     children: PropTypes.oneOfType([PropTypes.node]).isRequired,
     enabledFilters: PropTypes.arrayOf(PropTypes.string),
+    groupClickHandler: PropTypes.func.isRequired,
 };
 
 export default Group;

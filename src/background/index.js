@@ -55,10 +55,22 @@ const messageHandler = async (request, sender, sendResponse) => new Promise((res
                 // TODO do not update if value is the same
                 const group = FILTERS_DATA.groups[id];
                 if (!group) {
-                    reject(new Error(`there is no group with id: ${id}`));
+                    reject(new Error(`There is no group with id: ${id}`));
                 }
                 FILTERS_DATA.groups[id] = { ...group, enabled: value };
-                console.log(`Filter ${id} enabled property was set to: ${value}`);
+                console.log(`Group with id: "${id}" enabled property was set to: ${value}`);
+                resolve(true);
+                break;
+            }
+            case 'updateFilterStatus': {
+                const { id, value } = request;
+                // TODO do not update if value is the same
+                const filter = FILTERS_DATA.filters[id];
+                if (!filter) {
+                    reject(new Error(`There is no filter with id: ${id}`));
+                }
+                FILTERS_DATA.filters[id] = { ...filter, enabled: value };
+                console.log(`Filter with id: "${id}" enabled property was set to: ${value}`);
                 resolve(true);
                 break;
             }

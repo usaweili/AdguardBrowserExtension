@@ -3,6 +3,7 @@ import browser from 'webextension-polyfill';
 import sortBy from 'lodash/sortBy';
 import Group from './Group';
 import Checkbox from '../Settings/Checkbox';
+import Filter from './Filter';
 
 
 function filterUpdate(props) {
@@ -24,6 +25,7 @@ class Filters extends Component {
     state = {
         search: '',
         filtersData: {},
+        showFiltersByGroup: false,
     };
 
     async componentDidMount() {
@@ -66,6 +68,10 @@ class Filters extends Component {
         }));
     };
 
+    groupClickHandler = groupId => () => {
+        this.setState({ showFiltersByGroup: groupId });
+    };
+
     getEnabledFiltersByGroup = (group) => {
         const { filters } = this.state;
         return group.filters.map((filterId) => {
@@ -83,7 +89,7 @@ class Filters extends Component {
                     key={group.id}
                     {...group}
                     enabledFilters={enabledFilters}
-                    onClick={this.groupClickHandler}
+                    groupClickHandler={this.groupClickHandler(group.id)}
                 >
                     <Checkbox
                         id={group.id}
@@ -95,8 +101,57 @@ class Filters extends Component {
         });
     };
 
+    handleFilterSwitch = async ({ id, data }) => {
+        const { filters } = this.state;
+
+        try {
+            await browser.runtime.sendMessage({ type: 'updateFilterStatus', id, value: data });
+        } catch (e) {
+            console.log(e);
+        }
+
+        const filter = filters[id];
+        this.setState(state => ({
+            ...state,
+            filters: {
+                ...filters,
+                [id]: {
+                    ...filter,
+                    enabled: data,
+                },
+            },
+        }));
+    };
+
+    renderFilters = filters => Object.values(filters).map(filter => (
+        <Filter key={filter.id} name={filter.name}>
+            <Checkbox
+                id={filter.id}
+                value={filter.enabled}
+                handler={this.handleFilterSwitch}
+            />
+        </Filter>
+    ));
+
+    handleReturnToGroups = () => {
+        this.setState({ showFiltersByGroup: false });
+    };
+
     render() {
-        const { groups }  = this.state;
+        const { groups, showFiltersByGroup } = this.state;
+        if (showFiltersByGroup !== false) {
+            const { filters } = this.state;
+            const group = groups[showFiltersByGroup];
+            const groupFilters = group.filters.map(filterId => filters[filterId]);
+            return (
+                <Fragment>
+                    <button type="button" className="button" onClick={this.handleReturnToGroups}>back</button>
+                    <h2 className="title">{group.name}</h2>
+                    <input type="text" onChange={this.handleSearch} />
+                    {filters && this.renderFilters(groupFilters)}
+                </Fragment>
+            );
+        }
         return (
             <Fragment>
                 <h2 className="title">Filters</h2>

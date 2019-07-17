@@ -151,8 +151,10 @@ class Filters extends Component {
             const groupFilters = group.filters.map(filterId => filters[filterId]);
             return (
                 <Fragment>
-                    <button type="button" className="button" onClick={this.handleReturnToGroups}>back</button>
-                    <h2 className="title">{group.name}</h2>
+                    <div className="title-btn">
+                        <button type="button" className="button button--back" onClick={this.handleReturnToGroups} />
+                        <h2 className="title title--back-btn">{group.name}</h2>
+                    </div>
                     <input type="text" onChange={this.handleSearch} />
                     {filters && this.renderFilters(groupFilters)}
                 </Fragment>

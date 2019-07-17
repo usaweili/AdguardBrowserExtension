@@ -18,7 +18,7 @@ const renderTags = tags => tags.map((tag) => {
     console.log(tag);
     const tagString = `#${tag.keyword}`;
     return (
-        <div key={tag.id} className="filter__tag">{tagString}</div>
+        <div key={tag.id} className="setting__tag">{tagString}</div>
     );
 });
 
@@ -30,22 +30,21 @@ function Filter(props) {
         name, description, version, timeUpdated,
     } = filter;
     return (
-        <div className="filter" role="presentation">
-            <div className="filter__info">
-                <div className="filter__title">
+        <div className="setting" role="presentation">
+            <div className="setting__info">
+                <div className="setting__title">
                     {name}
                 </div>
-                <div className="filter__description">
-                    {description}
-                </div>
-                <div className="filter__version">
-                    {`version: ${version}`}
-                </div>
-                <div className="filter__updated">
-                    {`updated: ${formatDate(timeUpdated)}`}
+                <div className="setting__desc">
+                    <div className="setting__desc-item">
+                        {description}
+                    </div>
+                    <div className="setting__desc-item">
+                        {`version: ${version} updated: ${formatDate(timeUpdated)}`}
+                    </div>
                 </div>
                 {tags && (
-                <div className="filter__tags">
+                <div className="setting__tags">
                     {renderTags(tags)}
                 </div>
                 )}

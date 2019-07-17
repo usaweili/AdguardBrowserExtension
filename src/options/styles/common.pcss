@@ -15,6 +15,11 @@ body {
     font-size: 16px;
 }
 
+h2 {
+    margin: 0;
+    font-size: inherit;
+}
+
 .container {
     width: 960px;
     margin: 0 auto;
@@ -50,12 +55,20 @@ body {
     flex: 0 0 auto;
 }
 
+.title-btn {
+    position: relative;
+}
+
 .title {
     font-weight: bold;
     color: var(--gray-base);
     font-size: 30px;
     margin-top: 0;
     margin-bottom: 45px;
+
+    &--back-btn {
+        padding-left: 30px;
+    }
 }
 
 .desc {

@@ -68,8 +68,10 @@ class Filters extends Component {
         }));
     };
 
-    groupClickHandler = groupId => () => {
-        this.setState({ showFiltersByGroup: groupId });
+    groupClickHandler = groupId => (e) => {
+        if (!e.target.closest('.checkbox')) {
+            this.setState({ showFiltersByGroup: groupId });
+        }
     };
 
     getEnabledFiltersByGroup = (group) => {

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './checkbox.pcss';
 
@@ -13,7 +13,7 @@ function Checkbox(props) {
     };
 
     return (
-        <Fragment>
+        <div className="checkbox">
             <input
                 type="checkbox"
                 name={id}
@@ -26,7 +26,7 @@ function Checkbox(props) {
                 htmlFor={id}
                 className="checkbox__label"
             />
-        </Fragment>
+        </div>
     );
 }
 

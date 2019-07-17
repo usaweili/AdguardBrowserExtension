@@ -1,5 +1,15 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import Editor from '../Editor';
 
-export default function UserFilter() {
-    return <h2 className="title">UserFilter</h2>;
+function UserFilter() {
+    return (
+        <Fragment>
+            <h2 className="title">UserFilter</h2>
+            <div className="editor">
+                <Editor />
+            </div>
+        </Fragment>
+    );
 }
+
+export default UserFilter;

@@ -3,6 +3,7 @@ import browser from 'webextension-polyfill';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
 import Setting from '../Settings/Setting';
+import Editor from '../Editor';
 
 const WHITELIST_SETTINGS = {
     sections: {
@@ -108,6 +109,7 @@ class Whitelist extends Component {
                 </div>
                 {settings
                 && this.renderSections()}
+                <Editor />
             </Fragment>
         );
     }

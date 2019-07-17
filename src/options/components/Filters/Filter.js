@@ -15,7 +15,6 @@ const formatDate = (date) => {
 };
 
 const renderTags = tags => tags.map((tag) => {
-    console.log(tag);
     const tagString = `#${tag.keyword}`;
     return (
         <div key={tag.id} className="setting__tag">{tagString}</div>

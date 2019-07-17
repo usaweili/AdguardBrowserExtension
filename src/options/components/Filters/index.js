@@ -123,15 +123,21 @@ class Filters extends Component {
         }));
     };
 
-    renderFilters = filters => Object.values(filters).map(filter => (
-        <Filter key={filter.id} name={filter.name}>
-            <Checkbox
-                id={filter.id}
-                value={filter.enabled}
-                handler={this.handleFilterSwitch}
-            />
-        </Filter>
-    ));
+
+    renderFilters = filters => Object.values(filters).map((filter) => {
+        const tags = filter.tags
+            .map(tagId => this.state.tags[tagId])
+            .filter(entity => entity);
+        return (
+            <Filter key={filter.id} filter={filter} tags={tags}>
+                <Checkbox
+                    id={filter.id}
+                    value={filter.enabled}
+                    handler={this.handleFilterSwitch}
+                />
+            </Filter>
+        );
+    });
 
     handleReturnToGroups = () => {
         this.setState({ showFiltersByGroup: false });

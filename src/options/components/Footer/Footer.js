@@ -8,7 +8,7 @@ const Footer = () => (
                 <div className="footer__rate-desc">
                     Do you like Adguard?
                 </div>
-                <button type="button" className="btn btn--rate">
+                <button type="button" className="button button--rate">
                     Rate it
                 </button>
             </div>

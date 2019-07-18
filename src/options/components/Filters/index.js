@@ -5,8 +5,7 @@ import Group from './Group';
 import Checkbox from '../Settings/Checkbox';
 import Filter from './Filter';
 import EmptyCustom from './EmptyCustom';
-import Search from './Search';
-
+import Search from './Search/Search';
 
 function filterUpdate(props) {
     const { rulesCount, lastUpdateDate, updateClickHandler } = props;
@@ -144,9 +143,17 @@ class Filters extends Component {
         this.setState({ showFiltersByGroup: false });
     };
 
+    // TODO add validation
     searchInputHandler = (e) => {
         const { value } = e.target;
         this.setState({ searchInput: value });
+    };
+
+    searchCloseHandler = () => {
+        this.setState({
+            searchInput: '',
+            searchSelect: 'all',
+        });
     };
 
     searchSelectHandler = (e) => {
@@ -186,12 +193,24 @@ class Filters extends Component {
         });
     };
 
+    renderSearch() {
+        const { searchSelect, searchInput } = this.state;
+        return (
+            <Search
+                searchInputHandler={this.searchInputHandler}
+                searchSelectHandler={this.searchSelectHandler}
+                searchInput={searchInput}
+                searchSelect={searchSelect}
+                searchCloseHandler={this.searchCloseHandler}
+            />
+        );
+    }
+
     render() {
         const {
             groups,
             showFiltersByGroup,
             searchInput,
-            searchSelect,
         } = this.state;
 
         if (showFiltersByGroup !== false) {
@@ -216,12 +235,7 @@ class Filters extends Component {
                         <button type="button" className="button button--back" onClick={this.handleReturnToGroups} />
                         <h2 className="title title--back-btn">{group.name}</h2>
                     </div>
-                    <Search
-                        searchInputHandler={this.searchInputHandler}
-                        searchSelectHandler={this.searchSelectHandler}
-                        searchInput={searchInput}
-                        searchSelect={searchSelect}
-                    />
+                    {this.renderSearch()}
                     {
                         !searchInput
                             ? filters && this.renderFilters(groupFilters)
@@ -233,12 +247,7 @@ class Filters extends Component {
         return (
             <Fragment>
                 <h2 className="title">Filters</h2>
-                <Search
-                    searchInputHandler={this.searchInputHandler}
-                    searchSelectHandler={this.searchSelectHandler}
-                    searchInput={searchInput}
-                    searchSelect={searchSelect}
-                />
+                {this.renderSearch()}
                 {
                     !searchInput
                         ? groups && this.renderGroups(groups)

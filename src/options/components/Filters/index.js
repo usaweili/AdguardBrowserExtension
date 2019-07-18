@@ -4,6 +4,7 @@ import sortBy from 'lodash/sortBy';
 import Group from './Group';
 import Checkbox from '../Settings/Checkbox';
 import Filter from './Filter';
+import EmptyCustom from './EmptyCustom';
 
 
 function filterUpdate(props) {
@@ -146,11 +147,23 @@ class Filters extends Component {
     };
 
     render() {
-        const { groups, showFiltersByGroup } = this.state;
-        if (showFiltersByGroup !== false) {
+        const { groups } = this.state;
+        const showFiltersByGroup = 0;
+        if (groups && showFiltersByGroup !== false) {
             const { filters } = this.state;
             const group = groups[showFiltersByGroup];
             const groupFilters = group.filters.map(filterId => filters[filterId]);
+            if (group.id === 0 && groupFilters.length === 0) {
+                return (
+                    <Fragment>
+                        <div className="title-btn">
+                            <button type="button" className="button button--back" onClick={this.handleReturnToGroups} />
+                            <h2 className="title title--back-btn">{group.name}</h2>
+                        </div>
+                        <EmptyCustom />
+                    </Fragment>
+                );
+            }
             return (
                 <Fragment>
                     <div className="title-btn">

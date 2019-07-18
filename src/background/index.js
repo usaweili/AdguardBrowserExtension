@@ -90,6 +90,22 @@ const messageHandler = async (request, sender, sendResponse) => new Promise(asyn
                 }
                 break;
             }
+            case 'checkCustomUrl': {
+                const { url } = request;
+                if (url.match('error')) {
+                    reject(new Error('Url is not correct'));
+                } else {
+                    resolve({
+                        title: 'AdGuard Base filter',
+                        description: 'EasyList + AdGuard English filter. This filter is necessary for quality ad blocking.',
+                        version: '2.0.64.6',
+                        rulesCount: '95007',
+                        homepage: 'http://adguard.com/filters.html#english',
+                        url: 'https://filters.adtidy.org/extension/chromium/filters/2.txt',
+                    });
+                }
+                break;
+            }
             default:
                 break;
         }

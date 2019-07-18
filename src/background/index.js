@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { FILTERS_DATA } from './filters';
+import { getFiltersMeta } from './filters';
 
 let settings = {
     allowAcceptableAds: { id: 'allowAcceptableAds', value: true },
@@ -33,8 +33,11 @@ const APP_VERSION = '3.2.2';
 const getSettingsByIds = ids => ids.reduce((acc, id) => ({ ...acc, [id]: settings[id] }), {});
 
 // eslint-disable-next-line no-unused-vars
-const messageHandler = async (request, sender, sendResponse) => new Promise((resolve, reject) => {
-    setTimeout(() => {
+const messageHandler = async (request, sender, sendResponse) => new Promise(async (resolve, reject) => {
+    const FILTERS_DATA = await getFiltersMeta();
+    console.log(FILTERS_DATA);
+
+    setTimeout(async () => {
         const { type } = request;
         switch (type) {
             case 'getVersion': {

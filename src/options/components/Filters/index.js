@@ -42,10 +42,6 @@ class Filters extends Component {
         }
     }
 
-    handleSearch = (e) => {
-        console.log(e.target.value);
-    };
-
     handleGroupSwitch = async ({ id, data }) => {
         const { groups } = this.state;
 
@@ -145,8 +141,36 @@ class Filters extends Component {
         this.setState({ showFiltersByGroup: false });
     };
 
+    handleSearch = (e) => {
+        const { value } = e.target;
+        this.setState({ search: value });
+    };
+
+    renderSearchResult = () => {
+        const { filters, search } = this.state;
+        const filtersValues = Object.values(filters);
+        const searchQuery = new RegExp(search, 'ig');
+        return filtersValues.map((filter) => {
+            const tags = filter.tags
+                .map(tagId => this.state.tags[tagId])
+                .filter(entity => entity);
+
+            if (filter.name.match(searchQuery)) {
+                return (
+                    <Filter key={filter.id} filter={filter} tags={tags}>
+                        <Checkbox
+                            id={filter.id}
+                            value={filter.enabled}
+                            handler={this.handleFilterSwitch}
+                        />
+                    </Filter>
+                );
+            }
+        });
+    };
+
     render() {
-        const { groups, showFiltersByGroup } = this.state;
+        const { groups, showFiltersByGroup, search } = this.state;
         if (showFiltersByGroup !== false) {
             const { filters } = this.state;
             const group = groups[showFiltersByGroup];
@@ -166,7 +190,7 @@ class Filters extends Component {
             <Fragment>
                 <h2 className="title">Filters</h2>
                 <input type="text" onChange={this.handleSearch} />
-                {groups && this.renderGroups(groups)}
+                {!search ? groups && this.renderGroups(groups) : this.renderSearchResult()}
             </Fragment>
         );
     }

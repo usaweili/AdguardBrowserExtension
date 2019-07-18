@@ -110,6 +110,8 @@ class Whitelist extends Component {
                 {settings
                 && this.renderSections()}
                 <Editor />
+                <button type="button">Import</button>
+                <button type="button">Export</button>
             </Fragment>
         );
     }

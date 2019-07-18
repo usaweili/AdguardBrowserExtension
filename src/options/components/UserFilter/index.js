@@ -8,6 +8,8 @@ function UserFilter() {
             <div className="editor">
                 <Editor />
             </div>
+            <button type="button">Import</button>
+            <button type="button">Export</button>
         </Fragment>
     );
 }

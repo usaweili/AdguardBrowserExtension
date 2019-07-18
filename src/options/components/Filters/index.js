@@ -153,8 +153,8 @@ class Filters extends Component {
         this.setState({ searchSelect: value });
     };
 
-    renderSearchResult = () => {
-        const { filters, searchInput, searchSelect } = this.state;
+    renderSearchResult = (filters = this.state.filters) => {
+        const { searchInput, searchSelect } = this.state;
         const filtersValues = Object.values(filters);
         const searchQuery = new RegExp(searchInput, 'ig');
 
@@ -197,14 +197,24 @@ class Filters extends Component {
             const { filters } = this.state;
             const group = groups[showFiltersByGroup];
             const groupFilters = group.filters.map(filterId => filters[filterId]);
+
             return (
                 <Fragment>
                     <div className="title-btn">
                         <button type="button" className="button button--back" onClick={this.handleReturnToGroups} />
                         <h2 className="title title--back-btn">{group.name}</h2>
                     </div>
-                    <input type="text" onChange={this.handleSearch} />
-                    {filters && this.renderFilters(groupFilters)}
+                    <Search
+                        searchInputHandler={this.searchInputHandler}
+                        searchSelectHandler={this.searchSelectHandler}
+                        searchInput={searchInput}
+                        searchSelect={searchSelect}
+                    />
+                    {
+                        !searchInput
+                            ? filters && this.renderFilters(groupFilters)
+                            : this.renderSearchResult(groupFilters)
+                    }
                 </Fragment>
             );
         }

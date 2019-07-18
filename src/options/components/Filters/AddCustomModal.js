@@ -26,12 +26,15 @@ function ModalContentWrapper(props) {
     );
 }
 
+const defaultState = {
+    customUrlToAdd: '',
+    stepToRender: 'input',
+    filterToAdd: {},
+};
 
 class AddCustomModal extends Component {
     state = {
-        customUrlToAdd: '',
-        stepToRender: 'input',
-        filterToAdd: {},
+        ...defaultState,
     };
 
     handleInputChange = (e) => {
@@ -77,6 +80,27 @@ class AddCustomModal extends Component {
         );
     };
 
+    handleApprove = () => {
+        this.setState(async (state, props) => {
+            const { filterToAdd } = state;
+            const { closeModalHandler } = props;
+            if (!filterToAdd) {
+                return null;
+            }
+            try {
+                await browser.runtime.sendMessage({ type: 'addCustomFilter', filterToAdd });
+            } catch (e) {
+                console.log(e);
+                // TODO handle adding filter error;
+            }
+            closeModalHandler();
+            return {
+                ...state,
+                ...defaultState,
+            };
+        });
+    };
+
     renderApproveStep = () => {
         const {
             filterToAdd: {
@@ -87,7 +111,10 @@ class AddCustomModal extends Component {
         const { closeModalHandler } = this.props;
         return (
             <Fragment>
-                <ModalContentWrapper closeModalHandler={closeModalHandler} title="New filter subscription">
+                <ModalContentWrapper
+                    closeModalHandler={closeModalHandler}
+                    title="New filter subscription"
+                >
                     <div>
                         <div>Title:</div>
                         <div>{title}</div>
@@ -116,6 +143,7 @@ class AddCustomModal extends Component {
                         <input id="trusted" type="checkbox" />
                         <label htmlFor="trusted">Trusted</label>
                     </div>
+                    <button type="button" onClick={this.handleApprove}>Approve</button>
                 </ModalContentWrapper>
             </Fragment>
         );

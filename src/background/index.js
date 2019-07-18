@@ -106,6 +106,13 @@ const messageHandler = async (request, sender, sendResponse) => new Promise(asyn
                 }
                 break;
             }
+            case 'addCustomFilter': {
+                const { filterToAdd } = request;
+                console.log(filterToAdd);
+                // TODO implement filter add
+                resolve();
+                break;
+            }
             default:
                 break;
         }

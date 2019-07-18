@@ -4,6 +4,7 @@ import sortBy from 'lodash/sortBy';
 import Group from './Group';
 import Checkbox from '../Settings/Checkbox';
 import Filter from './Filter';
+import Search from './Search';
 
 
 function filterUpdate(props) {
@@ -23,7 +24,8 @@ function filterUpdate(props) {
 
 class Filters extends Component {
     state = {
-        search: '',
+        searchInput: '',
+        searchSelect: 'all',
         filtersData: {},
         showFiltersByGroup: false,
     };
@@ -141,21 +143,35 @@ class Filters extends Component {
         this.setState({ showFiltersByGroup: false });
     };
 
-    handleSearch = (e) => {
+    searchInputHandler = (e) => {
         const { value } = e.target;
-        this.setState({ search: value });
+        this.setState({ searchInput: value });
+    };
+
+    searchSelectHandler = (e) => {
+        const { value } = e.target;
+        this.setState({ searchSelect: value });
     };
 
     renderSearchResult = () => {
-        const { filters, search } = this.state;
+        const { filters, searchInput, searchSelect } = this.state;
         const filtersValues = Object.values(filters);
-        const searchQuery = new RegExp(search, 'ig');
+        const searchQuery = new RegExp(searchInput, 'ig');
+
         return filtersValues.map((filter) => {
             const tags = filter.tags
                 .map(tagId => this.state.tags[tagId])
                 .filter(entity => entity);
+            let searchMod;
+            switch (searchSelect) {
+                case 'enabled': searchMod = filter.enabled;
+                    break;
+                case 'disabled': searchMod = !filter.enabled;
+                    break;
+                default: searchMod = true;
+            }
 
-            if (filter.name.match(searchQuery)) {
+            if (filter.name.match(searchQuery) && searchMod) {
                 return (
                     <Filter key={filter.id} filter={filter} tags={tags}>
                         <Checkbox
@@ -170,7 +186,13 @@ class Filters extends Component {
     };
 
     render() {
-        const { groups, showFiltersByGroup, search } = this.state;
+        const {
+            groups,
+            showFiltersByGroup,
+            searchInput,
+            searchSelect,
+        } = this.state;
+
         if (showFiltersByGroup !== false) {
             const { filters } = this.state;
             const group = groups[showFiltersByGroup];
@@ -189,8 +211,17 @@ class Filters extends Component {
         return (
             <Fragment>
                 <h2 className="title">Filters</h2>
-                <input type="text" onChange={this.handleSearch} />
-                {!search ? groups && this.renderGroups(groups) : this.renderSearchResult()}
+                <Search
+                    searchInputHandler={this.searchInputHandler}
+                    searchSelectHandler={this.searchSelectHandler}
+                    searchInput={searchInput}
+                    searchSelect={searchSelect}
+                />
+                {
+                    !searchInput
+                        ? groups && this.renderGroups(groups)
+                        : this.renderSearchResult()
+                }
             </Fragment>
         );
     }

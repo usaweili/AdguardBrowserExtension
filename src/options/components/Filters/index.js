@@ -5,6 +5,7 @@ import Group from './Group';
 import Checkbox from '../Settings/Checkbox';
 import Filter from './Filter';
 import EmptyCustom from './EmptyCustom';
+import Search from './Search';
 
 
 function filterUpdate(props) {
@@ -24,7 +25,8 @@ function filterUpdate(props) {
 
 class Filters extends Component {
     state = {
-        search: '',
+        searchInput: '',
+        searchSelect: 'all',
         filtersData: {},
         showFiltersByGroup: false,
     };
@@ -42,10 +44,6 @@ class Filters extends Component {
             }));
         }
     }
-
-    handleSearch = (e) => {
-        console.log(e.target.value);
-    };
 
     handleGroupSwitch = async ({ id, data }) => {
         const { groups } = this.state;
@@ -146,13 +144,61 @@ class Filters extends Component {
         this.setState({ showFiltersByGroup: false });
     };
 
+    searchInputHandler = (e) => {
+        const { value } = e.target;
+        this.setState({ searchInput: value });
+    };
+
+    searchSelectHandler = (e) => {
+        const { value } = e.target;
+        this.setState({ searchSelect: value });
+    };
+
+    renderSearchResult = (filters = this.state.filters) => {
+        const { searchInput, searchSelect } = this.state;
+        const filtersValues = Object.values(filters);
+        const searchQuery = new RegExp(searchInput, 'ig');
+
+        return filtersValues.map((filter) => {
+            const tags = filter.tags
+                .map(tagId => this.state.tags[tagId])
+                .filter(entity => entity);
+            let searchMod;
+            switch (searchSelect) {
+                case 'enabled': searchMod = filter.enabled;
+                    break;
+                case 'disabled': searchMod = !filter.enabled;
+                    break;
+                default: searchMod = true;
+            }
+
+            if (filter.name.match(searchQuery) && searchMod) {
+                return (
+                    <Filter key={filter.id} filter={filter} tags={tags}>
+                        <Checkbox
+                            id={filter.id}
+                            value={filter.enabled}
+                            handler={this.handleFilterSwitch}
+                        />
+                    </Filter>
+                );
+            }
+        });
+    };
+
     render() {
-        const { groups } = this.state;
-        const showFiltersByGroup = 0;
-        if (groups && showFiltersByGroup !== false) {
+        const {
+            groups,
+            showFiltersByGroup,
+            searchInput,
+            searchSelect,
+        } = this.state;
+
+        if (showFiltersByGroup !== false) {
             const { filters } = this.state;
             const group = groups[showFiltersByGroup];
             const groupFilters = group.filters.map(filterId => filters[filterId]);
+
             if (group.id === 0 && groupFilters.length === 0) {
                 return (
                     <Fragment>
@@ -170,16 +216,34 @@ class Filters extends Component {
                         <button type="button" className="button button--back" onClick={this.handleReturnToGroups} />
                         <h2 className="title title--back-btn">{group.name}</h2>
                     </div>
-                    <input type="text" onChange={this.handleSearch} />
-                    {filters && this.renderFilters(groupFilters)}
+                    <Search
+                        searchInputHandler={this.searchInputHandler}
+                        searchSelectHandler={this.searchSelectHandler}
+                        searchInput={searchInput}
+                        searchSelect={searchSelect}
+                    />
+                    {
+                        !searchInput
+                            ? filters && this.renderFilters(groupFilters)
+                            : this.renderSearchResult(groupFilters)
+                    }
                 </Fragment>
             );
         }
         return (
             <Fragment>
                 <h2 className="title">Filters</h2>
-                <input type="text" onChange={this.handleSearch} />
-                {groups && this.renderGroups(groups)}
+                <Search
+                    searchInputHandler={this.searchInputHandler}
+                    searchSelectHandler={this.searchSelectHandler}
+                    searchInput={searchInput}
+                    searchSelect={searchSelect}
+                />
+                {
+                    !searchInput
+                        ? groups && this.renderGroups(groups)
+                        : this.renderSearchResult()
+                }
             </Fragment>
         );
     }

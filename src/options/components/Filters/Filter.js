@@ -14,12 +14,22 @@ const formatDate = (date) => {
     return dateObj.toLocaleDateString('default', formatOptions);
 };
 
-const renderTags = tags => tags.map((tag) => {
-    const tagString = `#${tag.keyword}`;
+const renderTags = (tags) => {
+    if (tags.length <= 0) {
+        return '';
+    }
+    const tagsNodes = tags.map((tag) => {
+        const tagString = `#${tag.keyword}`;
+        return (
+            <div key={tag.id} className="setting__tag">{tagString}</div>
+        );
+    });
     return (
-        <div key={tag.id} className="setting__tag">{tagString}</div>
+        <div className="setting__tags">
+            {tagsNodes}
+        </div>
     );
-});
+};
 
 function Filter(props) {
     const {
@@ -42,20 +52,22 @@ function Filter(props) {
                         {`version: ${version} updated: ${formatDate(timeUpdated)}`}
                     </div>
                 </div>
-                {tags && (
-                <div className="setting__tags">
-                    {renderTags(tags)}
-                </div>
-                )}
+                {renderTags(tags)}
                 {children}
             </div>
         </div>
     );
 }
 
+Filter.defaultProps = {
+    tags: [],
+};
+
 Filter.propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
     filter: PropTypes.object.isRequired,
-    children: PropTypes.oneOfType([PropTypes.node]).isRequired,
+    children: PropTypes.node.isRequired,
+    tags: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default Filter;

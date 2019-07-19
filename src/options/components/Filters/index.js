@@ -6,6 +6,7 @@ import Checkbox from '../Settings/Checkbox';
 import Filter from './Filter';
 import EmptyCustom from './EmptyCustom';
 import Search from './Search/Search';
+import background from '../../services/background';
 
 function filterUpdate(props) {
     const { rulesCount, lastUpdateDate, updateClickHandler } = props;
@@ -33,7 +34,7 @@ class Filters extends Component {
     async componentDidMount() {
         let filtersData;
         try {
-            filtersData = await browser.runtime.sendMessage({ type: 'getFiltersData' });
+            filtersData = await background.getFiltersData();
         } catch (e) {
             console.log(e);
         }
@@ -48,7 +49,7 @@ class Filters extends Component {
         const { groups } = this.state;
 
         try {
-            await browser.runtime.sendMessage({ type: 'updateGroupStatus', id, value: data });
+            await background.updateGroupStatus(id, data);
         } catch (e) {
             console.log(e);
         }
@@ -105,7 +106,7 @@ class Filters extends Component {
         const { filters } = this.state;
 
         try {
-            await browser.runtime.sendMessage({ type: 'updateFilterStatus', id, value: data });
+            await background.updateFilterStatus(id, data);
         } catch (e) {
             console.log(e);
         }

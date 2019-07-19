@@ -1,10 +1,10 @@
 import React, { Fragment, Component } from 'react';
-import browser from 'webextension-polyfill';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
 import Setting from '../Settings/Setting';
+import background from '../../services/background';
 
-const MISCELLANEOUS_SETTINGS = {
+const MISCELLANEOUS_META = {
     sets: {
         useOptimizedFilters: {
             id: 'useOptimizedFilters',
@@ -55,11 +55,10 @@ class Miscellaneous extends Component {
 
     async componentDidMount() {
         let settings;
-        const settingsIds = Object.keys(MISCELLANEOUS_SETTINGS.settings);
+        const settingsIds = Object.keys(MISCELLANEOUS_META.settings);
         try {
-            settings = await browser.runtime.sendMessage({ type: 'getSettingsByIds', settingsIds });
+            settings = await background.getSettingsByIds(settingsIds);
         } catch (e) {
-            // TODO [maximtop] create handler for errors
             console.log(e);
         }
         this.setState({ settings });
@@ -67,11 +66,10 @@ class Miscellaneous extends Component {
 
     handleSettingChange = async ({ id, data }) => {
         try {
-            await browser.runtime.sendMessage({ type: 'updateSetting', id, value: data });
+            await background.updateSetting(id, data);
             console.log(`Settings ${id} was changed to ${data}`);
         } catch (e) {
             console.log(e);
-            // TODO handle errors;
             return;
         }
         this.setState((state) => {
@@ -88,7 +86,7 @@ class Miscellaneous extends Component {
     renderSettings = (settingsIds) => {
         const settingsData = this.state.settings;
         const settingsMeta = settingsIds
-            .map(settingId => MISCELLANEOUS_SETTINGS.settings[settingId]);
+            .map(settingId => MISCELLANEOUS_META.settings[settingId]);
         const enrichedSettings = settingsMeta
             .map(settingsMetadata => ({
                 ...settingsMetadata,
@@ -109,7 +107,7 @@ class Miscellaneous extends Component {
             'showInfoAboutAdguardFullVersion',
             'showAppUpdatedNotification',
         ];
-        const sets = setsOrder.map(setId => MISCELLANEOUS_SETTINGS.sets[setId]);
+        const sets = setsOrder.map(setId => MISCELLANEOUS_META.sets[setId]);
         return sets.map(set => (
             <SettingsSet key={set.id} {...set}>{this.renderSettings(set.settings)}</SettingsSet>
         ));

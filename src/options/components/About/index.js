@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import browser from 'webextension-polyfill';
+import background from '../../services/background';
 import './about-page.pcss';
 
 export default class About extends Component {
@@ -8,9 +8,8 @@ export default class About extends Component {
     async componentDidMount() {
         let version;
         try {
-            version = await browser.runtime.sendMessage({ type: 'getVersion' });
+            version = await background.getAppVersion();
         } catch (e) {
-            // TODO handle errors;
             console.log(e);
         }
         this.setState(state => ({ ...state, version }));
@@ -27,6 +26,8 @@ export default class About extends Component {
                 <div className="about">
                     <div className="logo about__logo" />
                     <div className="about__version">
+                        Version
+                        {' '}
                         {version}
                     </div>
                     <div className="about__copyright">

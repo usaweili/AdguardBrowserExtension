@@ -1,8 +1,8 @@
 import React, { Fragment, Component } from 'react';
-import browser from 'webextension-polyfill';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
 import Setting from '../Settings/Setting';
+import background from '../../services/background';
 
 const filtersUpdatePeriodOptions = [48, 24, 12, 6, 1, 0].map((hours) => {
     const MS_IN_HOUR = 1000 * 60 * 60;
@@ -86,7 +86,7 @@ class General extends Component {
         let settings;
         const requiredSettingsIds = Object.keys(GENERAL_SETTINGS.settings);
         try {
-            settings = await browser.runtime.sendMessage({ type: 'getSettingsByIds', settingsIds: requiredSettingsIds });
+            settings = await background.getSettingsByIds(requiredSettingsIds);
         } catch (e) {
             console.log(e);
         }
@@ -102,7 +102,7 @@ class General extends Component {
 
     handleSettingChange = async ({ id, data }) => {
         try {
-            await browser.runtime.sendMessage({ type: 'updateSetting', id, value: data });
+            await background.updateSetting(id, data);
             console.log(`Settings ${id} was changed to ${data}`);
         } catch (e) {
             console.log(e);

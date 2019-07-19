@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import browser from 'webextension-polyfill';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
 import Setting from '../Settings/Setting';
+import background from '../../services/background';
 
-const STEALTH_SETTINGS = {
+const STEALTH_META = {
     sections: {
         stealthModeSection: {
             id: 'stealthModeSection',
@@ -104,24 +104,23 @@ class Stealth extends Component {
 
     async componentDidMount() {
         let settings;
-        const requiredSettingsIds = Object.keys(STEALTH_SETTINGS.settings);
+        const requiredSettingsIds = Object.keys(STEALTH_META.settings);
 
         try {
-            settings = await browser.runtime.sendMessage({ type: 'getSettingsByIds', settingsIds: requiredSettingsIds });
+            settings = await background.getSettingsByIds(requiredSettingsIds);
         } catch (e) {
-            // TODO handle errors;
             console.log(e);
         }
         this.setState({ settings });
     }
 
+    // TODO [maximtop] throttle input
     handleSettingChange = async ({ id, data }) => {
         try {
-            await browser.runtime.sendMessage({ type: 'updateSetting', id, value: data });
+            await background.updateSetting(id, data);
             console.log(`Settings ${id} was changed to ${data}`);
         } catch (e) {
             console.log(e);
-            // TODO handle errors;
             return;
         }
         this.setState((state) => {
@@ -137,7 +136,7 @@ class Stealth extends Component {
 
     renderSettings = (settingsIds) => {
         const settingsData = this.state.settings;
-        const settingsMeta = settingsIds.map(settingId => STEALTH_SETTINGS.settings[settingId]);
+        const settingsMeta = settingsIds.map(settingId => STEALTH_META.settings[settingId]);
         const enrichedSettings = settingsMeta.map((settingMeta) => {
             const settingData = settingsData[settingMeta.id];
             return { ...settingMeta, ...settingData };
@@ -148,7 +147,7 @@ class Stealth extends Component {
     };
 
     renderSets = (setsIds) => {
-        const sets = setsIds.map(setId => STEALTH_SETTINGS.sets[setId]);
+        const sets = setsIds.map(setId => STEALTH_META.sets[setId]);
         return sets.map(set => (
             <SettingsSet key={set.id} {...set}>
                 {this.renderSettings(set.settings)}
@@ -157,9 +156,9 @@ class Stealth extends Component {
     };
 
     renderSections = () => {
-        const order = ['stealthModeSection', 'cookiesSection', 'miscellaneousSection'];
-        return order.map((sectionId) => {
-            const section = STEALTH_SETTINGS.sections[sectionId];
+        const sectionsOrder = ['stealthModeSection', 'cookiesSection', 'miscellaneousSection'];
+        return sectionsOrder.map((sectionId) => {
+            const section = STEALTH_META.sections[sectionId];
             return (
                 <SettingsSection
                     key={section.id}

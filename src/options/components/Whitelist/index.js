@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import browser from 'webextension-polyfill';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
 import Setting from '../Settings/Setting';
 import Editor from '../Editor';
+import background from '../../services/background';
 
 const WHITELIST_SETTINGS = {
     sections: {
@@ -33,9 +33,8 @@ class Whitelist extends Component {
         const requiredSettingsIds = Object.keys(WHITELIST_SETTINGS.settings);
 
         try {
-            settings = await browser.runtime.sendMessage({ type: 'getSettingsByIds', settingsIds: requiredSettingsIds });
+            settings = await background.getSettingsByIds(requiredSettingsIds);
         } catch (e) {
-            // TODO handle errors;
             console.log(e);
         }
         this.setState({ settings });
@@ -43,11 +42,10 @@ class Whitelist extends Component {
 
     handleSettingChange = async ({ id, data }) => {
         try {
-            await browser.runtime.sendMessage({ type: 'updateSetting', id, value: data });
+            await background.updateSetting(id, data);
             console.log(`Settings ${id} was changed to ${data}`);
         } catch (e) {
             console.log(e);
-            // TODO handle errors;
             return;
         }
         this.setState((state) => {

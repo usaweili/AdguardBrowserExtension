@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Modal from 'react-modal';
 import browser from 'webextension-polyfill';
+import background from '../../services/background';
 
 Modal.setAppElement('#root');
 
@@ -39,7 +40,6 @@ class AddCustomModal extends Component {
 
     handleInputChange = (e) => {
         const { value } = e.target;
-        console.log(value);
         this.setState({ customUrlToAdd: value });
     };
 
@@ -48,10 +48,7 @@ class AddCustomModal extends Component {
         this.setState({ stepToRender: 'checking' });
         let result;
         try {
-            result = await browser.runtime.sendMessage({
-                type: 'checkCustomUrl',
-                url: customUrlToAdd,
-            });
+            result = await background.checkCustomUrl(customUrlToAdd);
         } catch (e) {
             console.log(e);
             this.setState({ stepToRender: 'error' });
@@ -88,10 +85,9 @@ class AddCustomModal extends Component {
                 return null;
             }
             try {
-                await browser.runtime.sendMessage({ type: 'addCustomFilter', filterToAdd });
+                await background.addCustomFilter(filterToAdd);
             } catch (e) {
                 console.log(e);
-                // TODO handle adding filter error;
             }
             closeModalHandler();
             return {

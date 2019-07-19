@@ -146,12 +146,12 @@ class Filters extends Component {
         this.setState({ showFiltersByGroup: false });
     };
 
-    // TODO add validation
+    // eslint-disable-next-line react/sort-comp
     setSearchInput = debounce((value) => {
-        console.log('setState');
         this.setState({ searchInput: value });
     }, 250);
 
+    // TODO add validation
     searchInputHandler = (e) => {
         const { value } = e.target;
         this.setSearchInput(value);

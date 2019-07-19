@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import Modal from 'react-modal';
-import browser from 'webextension-polyfill';
 import background from '../../services/background';
 
 Modal.setAppElement('#root');

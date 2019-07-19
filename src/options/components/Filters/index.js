@@ -1,5 +1,4 @@
 import React, { Fragment, Component } from 'react';
-import browser from 'webextension-polyfill';
 import sortBy from 'lodash/sortBy';
 import Group from './Group';
 import Checkbox from '../Settings/Checkbox';

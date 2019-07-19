@@ -1,5 +1,6 @@
 import React, { Fragment, Component } from 'react';
 import sortBy from 'lodash/sortBy';
+import debounce from 'lodash/debounce';
 import Group from './Group';
 import Checkbox from '../Settings/Checkbox';
 import Filter from './Filter';
@@ -124,29 +125,36 @@ class Filters extends Component {
     };
 
 
-    renderFilters = filters => Object.values(filters).map((filter) => {
-        const tags = filter.tags
-            .map(tagId => this.state.tags[tagId])
-            .filter(entity => entity);
-        return (
-            <Filter key={filter.id} filter={filter} tags={tags}>
-                <Checkbox
-                    id={filter.id}
-                    value={filter.enabled}
-                    handler={this.handleFilterSwitch}
-                />
-            </Filter>
-        );
-    });
+    renderFilters = filters => Object.values(filters)
+        .sort((filterA, filterB) => filterA.id - filterB.id)
+        .map((filter) => {
+            const tags = filter.tags
+                .map(tagId => this.state.tags[tagId])
+                .filter(entity => entity);
+            return (
+                <Filter key={filter.id} filter={filter} tags={tags}>
+                    <Checkbox
+                        id={filter.id}
+                        value={filter.enabled}
+                        handler={this.handleFilterSwitch}
+                    />
+                </Filter>
+            );
+        });
 
     handleReturnToGroups = () => {
         this.setState({ showFiltersByGroup: false });
     };
 
     // TODO add validation
+    setSearchInput = debounce((value) => {
+        console.log('setState');
+        this.setState({ searchInput: value });
+    }, 250);
+
     searchInputHandler = (e) => {
         const { value } = e.target;
-        this.setState({ searchInput: value });
+        this.setSearchInput(value);
     };
 
     searchCloseHandler = () => {

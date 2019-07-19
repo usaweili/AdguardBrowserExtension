@@ -16,6 +16,8 @@ function Editor() {
     return (
         <div className="editor">
             <AceEditor
+                width="620px"
+                height="300px"
                 mode="adguard"
                 theme="textmate"
                 onChange={onChange}

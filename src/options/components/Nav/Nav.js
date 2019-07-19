@@ -4,7 +4,7 @@ import './nav.pcss';
 
 const Nav = () => (
     <div className="nav">
-        <NavLink className="nav__item" activeClassName="nav__item--active" to="/">General</NavLink>
+        <NavLink className="nav__item" exact activeClassName="nav__item--active" to="/">General</NavLink>
         <NavLink className="nav__item" activeClassName="nav__item--active" to="/filters">Filters</NavLink>
         <NavLink className="nav__item" activeClassName="nav__item--active" to="/stealth">Stealth Mode</NavLink>
         <NavLink className="nav__item" activeClassName="nav__item--active" to="/whitelist">Whitelist</NavLink>

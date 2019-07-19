@@ -6,19 +6,23 @@ import 'brace/theme/textmate';
 
 import './mode-adguard';
 
+import './editor.pcss';
+
 function onChange(newValue) {
     console.log('change', newValue);
 }
 
 function Editor() {
     return (
-        <AceEditor
-            mode="adguard"
-            theme="textmate"
-            onChange={onChange}
-            name="user-filter"
-            editorProps={{ $blockScrolling: true }}
-        />
+        <div className="editor">
+            <AceEditor
+                mode="adguard"
+                theme="textmate"
+                onChange={onChange}
+                name="user-filter"
+                editorProps={{ $blockScrolling: true }}
+            />
+        </div>
     );
 }
 

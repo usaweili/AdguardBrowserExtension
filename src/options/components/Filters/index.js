@@ -4,7 +4,7 @@ import sortBy from 'lodash/sortBy';
 import Group from './Group';
 import Checkbox from '../Settings/Checkbox';
 import Filter from './Filter';
-import EmptyCustom from './EmptyCustom';
+import EmptyCustom from './EmptyCustom/EmptyCustom';
 import Search from './Search/Search';
 import background from '../../services/background';
 

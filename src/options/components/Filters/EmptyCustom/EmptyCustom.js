@@ -1,5 +1,6 @@
-import React, { Fragment, Component } from 'react';
-import AddCustomModal from './AddCustomModal';
+import React, { Component } from 'react';
+import AddCustomModal from '../AddCustomModal';
+import './empty-custom.pcss';
 
 class EmptyCustom extends Component {
     state = {
@@ -18,19 +19,25 @@ class EmptyCustom extends Component {
         const { modalIsOpen } = this.state;
         const text = "Sorry, but you don't have any custom filters yet";
         return (
-            <Fragment>
-                <div>empty icon</div>
-                <div>
+            <div className="empty-custom">
+                <div className="empty-custom__ico" />
+                <div className="empty-custom__desc">
                     {text}
                 </div>
-                <button type="button" onClick={this.openModalHandler}>Add custom filter</button>
+                <button
+                    type="button"
+                    onClick={this.openModalHandler}
+                    className="button button--m button--green"
+                >
+                    Add custom filter
+                </button>
                 {modalIsOpen && (
                 <AddCustomModal
                     closeModalHandler={this.closeModalHandler}
                     modalIsOpen={modalIsOpen}
                 />
                 )}
-            </Fragment>
+            </div>
         );
     }
 }

@@ -9,11 +9,9 @@ const FIREFOX_PATH = 'firefox';
 
 const firefoxConfig = {
     output: {
-        ...common.output,
         path: path.join(common.output.path, FIREFOX_PATH),
     },
     plugins: [
-        ...common.plugins,
         new CopyWebpackPlugin([
             {
                 from: path.resolve(__dirname, '../manifest.common.json'),

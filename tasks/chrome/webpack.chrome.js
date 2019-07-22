@@ -9,11 +9,9 @@ const CHROME_PATH = 'chrome';
 
 const chromeConfig = {
     output: {
-        ...common.output,
         path: path.join(common.output.path, CHROME_PATH),
     },
     plugins: [
-        ...common.plugins,
         new CopyWebpackPlugin([
             {
                 from: path.resolve(__dirname, '../manifest.common.json'),

@@ -79,6 +79,26 @@ class Background {
         const settingsService = await this.getSettingsService();
         return settingsService.addCustomFilter(url);
     }
+
+    async importSettings() {
+        const settingsService = await this.getSettingsService();
+        return settingsService.importSettings();
+    }
+
+    async exportSettings() {
+        const settingsService = await this.getSettingsService();
+        return settingsService.exportSettings();
+    }
+
+    async openFilteringLog() {
+        const settingsService = await this.getSettingsService();
+        return settingsService.openFilteringLog();
+    }
+
+    async resetStatistics() {
+        const settingsService = await this.getSettingsService();
+        return settingsService.resetStatistics();
+    }
 }
 
 const background = new Background();

@@ -163,6 +163,8 @@ class General extends Component {
                 <h2 className="title">Settings</h2>
                 {settings
                 && this.renderSections()}
+                <button type="button" className="button button--m button--green content__btn">Export settings</button>
+                <button type="button" className="button button--m button--green-bd content__btn">Import settings</button>
             </Fragment>
         );
     }

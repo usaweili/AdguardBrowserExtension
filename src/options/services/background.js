@@ -96,7 +96,7 @@ class Background {
     }
 
     async resetStatistics() {
-        const settingsService = await this.resetStatistics();
+        const settingsService = await this.getSettingsService();
         return settingsService.resetStatistics();
     }
 }

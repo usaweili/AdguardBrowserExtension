@@ -15,8 +15,8 @@ const IS_DEV = process.env.NODE_ENV === 'development';
 const BUILD_PATH = '../build';
 const OUTPUT_PATH = getOutputPathByEnv(process.env.NODE_ENV);
 
-// this options needed to exclude clean of manifest.json in the watch mode
-const cleanOptions = IS_DEV ? { cleanAfterEveryBuildPatterns: ['!manifest.json'] } : {};
+// this options needed to exclude clean static files in the watch mode
+const cleanOptions = IS_DEV ? { cleanAfterEveryBuildPatterns: ['!**/*.json', '!assets/**/*'] } : {};
 
 const config = {
     mode: IS_DEV ? 'development' : 'production',

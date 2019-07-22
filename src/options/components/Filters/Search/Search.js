@@ -17,7 +17,7 @@ export default function Search(props) {
                 className="search__input"
                 type="text"
                 onChange={searchInputHandler}
-                // value={searchInput}
+                value={searchInput}
             />
             <select
                 name="select_time"

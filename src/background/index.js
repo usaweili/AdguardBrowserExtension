@@ -85,14 +85,27 @@ global.settingsService = (async function settingsService() {
 
     const getFiltersData = () => FILTERS_DATA;
 
+    const getFiltersInfo = () => ({
+        lastUpdateDate: Date.now(),
+        rulesCount: 123123,
+    });
+
+    const updateFilters = () => new Promise(((resolve) => {
+        setTimeout(() => {
+            resolve(true);
+        }, 1000);
+    }));
+
     return {
         appVersion: APP_VERSION,
         getSettingsByIds,
         updateSetting,
         getFiltersData,
+        getFiltersInfo,
         updateGroupStatus,
         updateFilterStatus,
         checkCustomUrl,
         addCustomFilter,
+        updateFilters,
     };
 }());

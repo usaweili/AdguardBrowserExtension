@@ -8,39 +8,28 @@ import EmptyCustom from './EmptyCustom/EmptyCustom';
 import Search from './Search/Search';
 import background from '../../services/background';
 
-function filterUpdate(props) {
-    const { rulesCount, lastUpdateDate, updateClickHandler } = props;
-    return (
-        <Fragment>
-            <div>
-                { `"Filter rules count: " ${rulesCount}` }
-            </div>
-            <div>
-                {lastUpdateDate}
-            </div>
-            <div onChange={updateClickHandler}>update button</div>
-        </Fragment>
-    );
-}
-
 class Filters extends Component {
     state = {
         searchInput: '',
         searchSelect: 'all',
         filtersData: {},
         showFiltersByGroup: false,
+        filtersInfo: {},
+        filtersUpdating: false,
     };
 
     async componentDidMount() {
         let filtersData;
+        let filtersInfo;
         try {
             filtersData = await background.getFiltersData();
+            filtersInfo = await background.getFiltersInfo();
         } catch (e) {
             console.log(e);
         }
         if (filtersData) {
             this.setState(state => ({
-                ...state, ...filtersData,
+                ...state, ...filtersData, ...filtersInfo,
             }));
         }
     }
@@ -78,7 +67,8 @@ class Filters extends Component {
         return group.filters.map((filterId) => {
             const { enabled, name } = filters[filterId];
             return enabled && name;
-        }).filter(name => !!name);
+        })
+            .filter(name => !!name);
     };
 
     renderGroups = (groups) => {
@@ -180,11 +170,14 @@ class Filters extends Component {
                 .filter(entity => entity);
             let searchMod;
             switch (searchSelect) {
-                case 'enabled': searchMod = filter.enabled;
+                case 'enabled':
+                    searchMod = filter.enabled;
                     break;
-                case 'disabled': searchMod = !filter.enabled;
+                case 'disabled':
+                    searchMod = !filter.enabled;
                     break;
-                default: searchMod = true;
+                default:
+                    searchMod = true;
             }
 
             if (filter.name.match(searchQuery) && searchMod) {
@@ -214,6 +207,50 @@ class Filters extends Component {
         );
     }
 
+    updateFiltersHandler = async () => {
+        this.setState({ filtersUpdating: true });
+        try {
+            await background.updateFilters();
+        } catch (e) {
+            console.log(e);
+            this.setState({ filtersUpdating: false });
+            return;
+        }
+        let filtersInfo;
+        try {
+            filtersInfo = await background.getFiltersInfo();
+        } catch (e) {
+            console.log(e);
+        }
+        this.setState({ ...filtersInfo, filtersUpdating: false });
+    };
+
+    renderFiltersUpdate = () => {
+        const { rulesCount, lastUpdateDate, filtersUpdating } = this.state;
+        const dateObj = new Date(lastUpdateDate);
+        const formatOptions = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        };
+        const buttonClass = filtersUpdating ? 'loading' : 'loaded';
+        return (
+            <div role="button" onClick={this.updateFiltersHandler}>
+                <div>
+                    {`Filter rules count: ${rulesCount}`}
+                </div>
+                <div>
+                    {dateObj.toLocaleDateString('default', formatOptions)}
+                </div>
+                <div>
+                    <button type="button" className={buttonClass}>Update button</button>
+                </div>
+            </div>
+        );
+    };
+
     render() {
         const {
             groups,
@@ -230,7 +267,11 @@ class Filters extends Component {
                 return (
                     <Fragment>
                         <div className="title-btn">
-                            <button type="button" className="button button--back" onClick={this.handleReturnToGroups} />
+                            <button
+                                type="button"
+                                className="button button--back"
+                                onClick={this.handleReturnToGroups}
+                            />
                             <h2 className="title title--back-btn">{group.name}</h2>
                         </div>
                         <EmptyCustom />
@@ -240,7 +281,11 @@ class Filters extends Component {
             return (
                 <Fragment>
                     <div className="title-btn">
-                        <button type="button" className="button button--back" onClick={this.handleReturnToGroups} />
+                        <button
+                            type="button"
+                            className="button button--back"
+                            onClick={this.handleReturnToGroups}
+                        />
                         <h2 className="title title--back-btn">{group.name}</h2>
                     </div>
                     {this.renderSearch()}
@@ -255,6 +300,7 @@ class Filters extends Component {
         return (
             <Fragment>
                 <h2 className="title">Filters</h2>
+                {this.renderFiltersUpdate()}
                 {this.renderSearch()}
                 {
                     !searchInput

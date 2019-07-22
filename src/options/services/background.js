@@ -50,6 +50,16 @@ class Background {
         return settingsService.getFiltersData();
     }
 
+    async getFiltersInfo() {
+        const settingsService = await this.getSettingsService();
+        return settingsService.getFiltersInfo();
+    }
+
+    async updateFilters() {
+        const settingsService = await this.getSettingsService();
+        return settingsService.updateFilters();
+    }
+
     async updateGroupStatus(id, value) {
         const settingsService = await this.getSettingsService();
         return settingsService.updateGroupStatus(id, value);

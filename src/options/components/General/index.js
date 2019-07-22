@@ -69,12 +69,31 @@ const GENERAL_SETTINGS = {
         },
     },
     settings: {
-        allowAcceptableAds: { id: 'allowAcceptableAds', type: 'checkbox' },
-        showPageStatistic: { id: 'showPageStatistic', type: 'checkbox' },
-        filtersAutodetect: { id: 'filtersAutodetect', type: 'checkbox' },
-        filtersUpdatePeriod: { id: 'filtersUpdatePeriod', type: 'select', options: filtersUpdatePeriodOptions },
-        safebrowsingEnabled: { id: 'safebrowsingEnabled', type: 'checkbox' },
-        sendSafebrowsingStats: { id: 'sendSafebrowsingStats', type: 'checkbox' },
+        allowAcceptableAds: {
+            id: 'allowAcceptableAds',
+            type: 'checkbox',
+        },
+        showPageStatistic: {
+            id: 'showPageStatistic',
+            type: 'checkbox',
+        },
+        filtersAutodetect: {
+            id: 'filtersAutodetect',
+            type: 'checkbox',
+        },
+        filtersUpdatePeriod: {
+            id: 'filtersUpdatePeriod',
+            type: 'select',
+            options: filtersUpdatePeriodOptions,
+        },
+        safebrowsingEnabled: {
+            id: 'safebrowsingEnabled',
+            type: 'checkbox',
+        },
+        sendSafebrowsingStats: {
+            id: 'sendSafebrowsingStats',
+            type: 'checkbox',
+        },
     },
 };
 
@@ -112,10 +131,16 @@ class General extends Component {
         this.setState((state) => {
             const { settings } = state;
             const setting = settings[id];
-            const updatedSetting = { ...setting, value: data };
+            const updatedSetting = {
+                ...setting,
+                value: data,
+            };
             return {
                 ...state,
-                settings: { ...settings, [id]: updatedSetting },
+                settings: {
+                    ...settings,
+                    [id]: updatedSetting,
+                },
             };
         });
     };
@@ -128,7 +153,7 @@ class General extends Component {
             return { ...settingMeta, ...settingData };
         });
         return enrichedSettings.map(setting => (
-            <Setting key={setting.id} setting={setting} handler={this.handleSettingChange} />
+            <Setting key={setting.id} setting={setting} handler={this.handleSettingChange}/>
         ));
     };
 
@@ -156,6 +181,44 @@ class General extends Component {
         });
     };
 
+    handleImportSettings = async () => {
+        let result;
+        try {
+            result = await background.importSettings();
+        } catch (e) {
+            // TODO show flash notification
+            console.log(e);
+        }
+
+        if (!result) {
+            console.log('was unable to import settings');
+            return;
+        }
+
+        let settings;
+        const requiredSettingsIds = Object.keys(GENERAL_SETTINGS.settings);
+        try {
+            settings = await background.getSettingsByIds(requiredSettingsIds);
+        } catch (e) {
+            console.log(e);
+        }
+        this.setState(settings);
+    };
+
+    handleExportSettings = async () => {
+        let result;
+        try {
+            result = await background.exportSettings();
+        } catch (e) {
+            console.log(e);
+        }
+        if (result) {
+            console.log('settings exported successfully');
+        } else {
+            console.log('was unable to export settings');
+        }
+    };
+
     render() {
         const { settings } = this.state;
         return (
@@ -163,8 +226,20 @@ class General extends Component {
                 <h2 className="title">Settings</h2>
                 {settings
                 && this.renderSections()}
-                <button type="button" className="button button--m button--green content__btn">Export settings</button>
-                <button type="button" className="button button--m button--green-bd content__btn">Import settings</button>
+                <button
+                    type="button"
+                    className="button button--m button--green content__btn"
+                    onClick={this.handleExportSettings}
+                >
+                    Export settings
+                </button>
+                <button
+                    type="button"
+                    className="button button--m button--green-bd content__btn"
+                    onClick={this.handleImportSettings}
+                >
+                    Import settings
+                </button>
             </Fragment>
         );
     }

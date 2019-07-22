@@ -27,6 +27,7 @@ let SETTINGS = {
     invertWhitelist: { id: 'invertWhitelist', value: false },
 };
 
+
 global.settingsService = (async function settingsService() {
     const FILTERS_DATA = await getFiltersMeta();
     const APP_VERSION = '3.2.2';
@@ -96,6 +97,20 @@ global.settingsService = (async function settingsService() {
         }, 1000);
     }));
 
+    const importSettings = () => new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(true);
+            console.log('settings imported successfully');
+        }, 1000);
+    });
+
+    const exportSettings = () => new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(true);
+            console.log('settings exported successfully');
+        }, 1000);
+    });
+
     return {
         appVersion: APP_VERSION,
         getSettingsByIds,
@@ -107,5 +122,7 @@ global.settingsService = (async function settingsService() {
         checkCustomUrl,
         addCustomFilter,
         updateFilters,
+        importSettings,
+        exportSettings,
     };
 }());

@@ -79,6 +79,16 @@ class Background {
         const settingsService = await this.getSettingsService();
         return settingsService.addCustomFilter(url);
     }
+
+    async importSettings() {
+        const settingsService = await this.getSettingsService();
+        return settingsService.importSettings();
+    }
+
+    async exportSettings() {
+        const settingsService = await this.getSettingsService();
+        return settingsService.exportSettings();
+    }
 }
 
 const background = new Background();

@@ -6,6 +6,7 @@ import Filter from './Filter';
 import EmptyCustom from './EmptyCustom/EmptyCustom';
 import Search from './Search/Search';
 import background from '../../services/background';
+import FiltersUpdate from './FiltersUpdate/FiltersUpdate';
 
 class Filters extends Component {
     state = {
@@ -221,27 +222,14 @@ class Filters extends Component {
 
     renderFiltersUpdate = () => {
         const { rulesCount, lastUpdateDate, filtersUpdating } = this.state;
-        const dateObj = new Date(lastUpdateDate);
-        const formatOptions = {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        };
         const buttonClass = filtersUpdating ? 'loading' : 'loaded';
         return (
-            <div role="button" onClick={this.updateFiltersHandler}>
-                <div>
-                    {`Filter rules count: ${rulesCount}`}
-                </div>
-                <div>
-                    {dateObj.toLocaleDateString('default', formatOptions)}
-                </div>
-                <div>
-                    <button type="button" className={buttonClass}>Update button</button>
-                </div>
-            </div>
+            <FiltersUpdate
+                handler={this.updateFiltersHandler}
+                rulesCount={rulesCount}
+                buttonClass={buttonClass}
+                lastUpdateDate={lastUpdateDate}
+            />
         );
     };
 
@@ -293,8 +281,10 @@ class Filters extends Component {
         }
         return (
             <Fragment>
-                <h2 className="title">Filters</h2>
-                {this.renderFiltersUpdate()}
+                <div className="title-btn">
+                    {this.renderFiltersUpdate()}
+                    <h2 className="title title--filters-up">Filters</h2>
+                </div>
                 {this.renderSearch()}
                 {
                     !searchInput

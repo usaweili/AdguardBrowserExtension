@@ -6,7 +6,7 @@ function SettingsSection(props) {
     return (
         <div key={title}>
             <div className="settings-group">
-                {title && <h3>{title}</h3>}
+                {title && <h3 className="subtitle">{title}</h3>}
                 {children}
             </div>
         </div>

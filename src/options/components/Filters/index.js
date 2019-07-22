@@ -1,6 +1,5 @@
 import React, { Fragment, Component } from 'react';
 import sortBy from 'lodash/sortBy';
-import debounce from 'lodash/debounce';
 import Group from './Group';
 import Checkbox from '../Settings/Checkbox';
 import Filter from './Filter';
@@ -136,15 +135,10 @@ class Filters extends Component {
         this.setState({ showFiltersByGroup: false });
     };
 
-    // eslint-disable-next-line react/sort-comp
-    setSearchInput = debounce((value) => {
-        this.setState({ searchInput: value });
-    }, 250);
-
     // TODO add validation
     searchInputHandler = (e) => {
         const { value } = e.target;
-        this.setSearchInput(value);
+        this.setState({ searchInput: value });
     };
 
     searchCloseHandler = () => {

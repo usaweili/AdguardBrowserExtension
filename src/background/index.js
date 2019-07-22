@@ -111,6 +111,21 @@ global.settingsService = (async function settingsService() {
         }, 1000);
     });
 
+    const openFilteringLog = () => new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(true);
+            console.log('filtering log opened');
+        }, 1000);
+    });
+
+    const resetStatistics = () => new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(true);
+            console.log('statistics was reset');
+        }, 1000);
+    });
+
+
     return {
         appVersion: APP_VERSION,
         getSettingsByIds,
@@ -124,5 +139,7 @@ global.settingsService = (async function settingsService() {
         updateFilters,
         importSettings,
         exportSettings,
+        openFilteringLog,
+        resetStatistics,
     };
 }());

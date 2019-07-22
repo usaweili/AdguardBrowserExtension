@@ -89,6 +89,16 @@ class Background {
         const settingsService = await this.getSettingsService();
         return settingsService.exportSettings();
     }
+
+    async openFilteringLog() {
+        const settingsService = await this.getSettingsService();
+        return settingsService.openFilteringLog();
+    }
+
+    async resetStatistics() {
+        const settingsService = await this.resetStatistics();
+        return settingsService.resetStatistics();
+    }
 }
 
 const background = new Background();

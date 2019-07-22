@@ -26,7 +26,7 @@ const MISCELLANEOUS_META = {
         },
         enableShowContextMenu: {
             id: 'enableShowContextMenu',
-            title: "Add AdGuard item to browser's context menu",
+            title: 'Add AdGuard item to browser\'s context menu',
             settings: ['enableShowContextMenu'],
         },
         showInfoAboutAdguardFullVersion: {
@@ -41,12 +41,30 @@ const MISCELLANEOUS_META = {
         },
     },
     settings: {
-        useOptimizedFilters: { id: 'useOptimizedFilters', type: 'checkbox' },
-        integrationModeCheckbox: { id: 'integrationModeCheckbox', type: 'checkbox' },
-        enableHitsCount: { id: 'enableHitsCount', type: 'checkbox' },
-        enableShowContextMenu: { id: 'enableShowContextMenu', type: 'checkbox' },
-        showInfoAboutAdguardFullVersion: { id: 'showInfoAboutAdguardFullVersion', type: 'checkbox' },
-        showAppUpdatedNotification: { id: 'showAppUpdatedNotification', type: 'checkbox' },
+        useOptimizedFilters: {
+            id: 'useOptimizedFilters',
+            type: 'checkbox',
+        },
+        integrationModeCheckbox: {
+            id: 'integrationModeCheckbox',
+            type: 'checkbox',
+        },
+        enableHitsCount: {
+            id: 'enableHitsCount',
+            type: 'checkbox',
+        },
+        enableShowContextMenu: {
+            id: 'enableShowContextMenu',
+            type: 'checkbox',
+        },
+        showInfoAboutAdguardFullVersion: {
+            id: 'showInfoAboutAdguardFullVersion',
+            type: 'checkbox',
+        },
+        showAppUpdatedNotification: {
+            id: 'showAppUpdatedNotification',
+            type: 'checkbox',
+        },
     },
 };
 
@@ -75,10 +93,16 @@ class Miscellaneous extends Component {
         this.setState((state) => {
             const { settings } = state;
             const setting = settings[id];
-            const updatedSetting = { ...setting, value: data };
+            const updatedSetting = {
+                ...setting,
+                value: data,
+            };
             return {
                 ...state,
-                settings: { ...settings, [id]: updatedSetting },
+                settings: {
+                    ...settings,
+                    [id]: updatedSetting,
+                },
             };
         });
     };
@@ -113,6 +137,19 @@ class Miscellaneous extends Component {
         ));
     };
 
+    handleFilteringLogClick = async () => {
+        await background.openFilteringLog();
+    };
+
+    handleResetStatisticsClick = async () => {
+        await background.resetStatistics();
+    };
+
+    handleOpenChangelog = () => {
+        // TODO [maximtop] replace link with tds
+        window.open('https://github.com/AdguardTeam/AdguardBrowserExtension/releases', '_blank');
+    };
+
     render() {
         const { settings } = this.state;
         return (
@@ -120,13 +157,31 @@ class Miscellaneous extends Component {
                 <h2 className="title">Miscellaneous</h2>
                 {settings
                 && (
-                <SettingsSection>
-                    {this.renderSets()}
-                </SettingsSection>
+                    <SettingsSection>
+                        {this.renderSets()}
+                    </SettingsSection>
                 )}
-                <button type="button" className="button button--m button--green content__btn">Filtering log</button>
-                <button type="button" className="button button--m button--green-bd content__btn">Reset statistics</button>
-                <button type="button" className="button button--m button--green-bd content__btn">Changelog</button>
+                <button
+                    type="button"
+                    className="button button--m button--green content__btn"
+                    onClick={this.handleFilteringLogClick}
+                >
+                    Filtering log
+                </button>
+                <button
+                    type="button"
+                    className="button button--m button--green-bd content__btn"
+                    onClick={this.handleResetStatisticsClick}
+                >
+                    Reset statistics
+                </button>
+                <button
+                    type="button"
+                    className="button button--m button--green-bd content__btn"
+                    onClick={this.handleOpenChangelog}
+                >
+                    Changelog
+                </button>
             </Fragment>
         );
     }

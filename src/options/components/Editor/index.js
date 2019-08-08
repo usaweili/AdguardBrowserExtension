@@ -16,12 +16,22 @@ function onChange(newValue) {
 function Editor() {
     const reactAceComponent = React.createRef();
 
-    function onResize() {
+    const editorStorageSize = localStorage.getItem('editorSize');
+
+    const editorSize = editorStorageSize ? JSON.parse(editorStorageSize) : false;
+
+    const editorStyles = {
+        width: editorSize ? editorSize.width : 'auto',
+        height: editorSize ? editorSize.height : 'auto',
+    };
+
+    function onResize(width, height) {
+        localStorage.setItem('editorSize', JSON.stringify({ width, height }));
         reactAceComponent.current.editor.resize();
     }
 
     return (
-        <div className="editor">
+        <div style={editorStyles} className="editor">
             <AceEditor
                 ref={reactAceComponent}
                 width="100%"
@@ -33,7 +43,12 @@ function Editor() {
                 showPrintMargin={false}
                 editorProps={{ $blockScrolling: true }}
             />
-            <ReactResizeDetector handleWidth handleHeight onResize={onResize} />
+            <ReactResizeDetector
+                skipOnMount={true}
+                handleWidth
+                handleHeight
+                onResize={onResize}
+            />
         </div>
     );
 }

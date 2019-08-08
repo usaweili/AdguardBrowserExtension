@@ -1,5 +1,6 @@
 import React from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
+import ScrollToTop from '../ScrollToTop';
 import '../../styles/styles.pcss';
 
 import {
@@ -9,22 +10,24 @@ import {
 function App() {
     return (
         <HashRouter hashType="noslash">
-            <div className="page container">
-                <Sidebar />
-                <div className="content">
-                    <Switch>
-                        <Route path="/" exact component={General} />
-                        <Route path="/filters" component={Filters} />
-                        <Route path="/stealth" component={Stealth} />
-                        <Route path="/whitelist" component={Whitelist} />
-                        <Route path="/user-filter" component={UserFilter} />
-                        <Route path="/miscellaneous" component={Miscellaneous} />
-                        <Route path="/about" component={About} />
-                        <Route component={General} />
-                    </Switch>
+            <ScrollToTop>
+                <div className="page container">
+                    <Sidebar />
+                    <div className="content">
+                        <Switch>
+                            <Route path="/" exact component={General} />
+                            <Route path="/filters" component={Filters} />
+                            <Route path="/stealth" component={Stealth} />
+                            <Route path="/whitelist" component={Whitelist} />
+                            <Route path="/user-filter" component={UserFilter} />
+                            <Route path="/miscellaneous" component={Miscellaneous} />
+                            <Route path="/about" component={About} />
+                            <Route component={General} />
+                        </Switch>
+                    </div>
                 </div>
-            </div>
-            <Footer />
+                <Footer />
+            </ScrollToTop>
         </HashRouter>
     );
 }

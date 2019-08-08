@@ -186,21 +186,9 @@ class Filters extends Component {
                     </Filter>
                 );
             }
+            return null;
         });
     };
-
-    renderSearch() {
-        const { searchSelect, searchInput } = this.state;
-        return (
-            <Search
-                searchInputHandler={this.searchInputHandler}
-                searchSelectHandler={this.searchSelectHandler}
-                searchInput={searchInput}
-                searchSelect={searchSelect}
-                searchCloseHandler={this.searchCloseHandler}
-            />
-        );
-    }
 
     updateFiltersHandler = async () => {
         this.setState({ filtersUpdating: true });
@@ -219,6 +207,19 @@ class Filters extends Component {
         }
         this.setState({ ...filtersInfo, filtersUpdating: false });
     };
+
+    renderSearch() {
+        const { searchSelect, searchInput } = this.state;
+        return (
+            <Search
+                searchInputHandler={this.searchInputHandler}
+                searchSelectHandler={this.searchSelectHandler}
+                searchInput={searchInput}
+                searchSelect={searchSelect}
+                searchCloseHandler={this.searchCloseHandler}
+            />
+        );
+    }
 
     renderFiltersUpdate = () => {
         const { rulesCount, lastUpdateDate, filtersUpdating } = this.state;

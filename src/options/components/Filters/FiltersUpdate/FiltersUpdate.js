@@ -21,7 +21,7 @@ function FiltersUpdate(props) {
     const dateObj = new Date(lastUpdateDate);
 
     return (
-        <div className="filters-update" role="button" onClick={handler}>
+        <button className="filters-update" type="button" onClick={handler}>
             <div className="filters-update__info">
                 <div className="filters-update__title">
                     {`Filter rules count: ${rulesCount}`}
@@ -31,7 +31,7 @@ function FiltersUpdate(props) {
                 </div>
             </div>
             <button type="button" className={`button filters-update__btn filters-update__btn--${buttonClass}`} />
-        </div>
+        </button>
     );
 }
 

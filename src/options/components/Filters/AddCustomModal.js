@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import background from '../../services/background';
 
@@ -40,6 +41,12 @@ function ModalContentWrapper(props) {
         </div>
     );
 }
+
+ModalContentWrapper.propTypes = {
+    closeModalHandler: PropTypes.func.isRequired,
+    children: PropTypes.arrayOf(PropTypes.node).isRequired,
+    title: PropTypes.string.isRequired,
+};
 
 const defaultState = {
     customUrlToAdd: '',
@@ -273,5 +280,10 @@ class AddCustomModal extends Component {
         );
     }
 }
+
+AddCustomModal.propTypes = {
+    closeModalHandler: PropTypes.func.isRequired,
+    modalIsOpen: PropTypes.bool.isRequired,
+};
 
 export default AddCustomModal;

@@ -153,7 +153,7 @@ class General extends Component {
             return { ...settingMeta, ...settingData };
         });
         return enrichedSettings.map(setting => (
-            <Setting key={setting.id} setting={setting} handler={this.handleSettingChange}/>
+            <Setting key={setting.id} setting={setting} handler={this.handleSettingChange} />
         ));
     };
 

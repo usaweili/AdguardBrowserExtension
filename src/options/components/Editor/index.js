@@ -44,7 +44,7 @@ function Editor() {
                 editorProps={{ $blockScrolling: true }}
             />
             <ReactResizeDetector
-                skipOnMount={true}
+                skipOnMount
                 handleWidth
                 handleHeight
                 onResize={onResize}

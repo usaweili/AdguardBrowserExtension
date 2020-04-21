@@ -116,7 +116,21 @@
         }
         const args = getStringInBraces(rule)
             .split(/, /g)
-            .map((arg, index) => (index === 0 ? `ubo-${arg}` : arg))
+            .map((arg, index) => {
+                debugger;
+                let outputArg;
+                if (index === 0) {
+                    // handle ubo aliases without '.js' at the end
+                    outputArg = (arg.indexOf('.js') > -1) ? `ubo-${arg}` : `ubo-${arg}.js`;
+                } else {
+                    outputArg = arg;
+                }
+                // for example: dramaserial.xyz##+js(abort-current-inline-script, $, popup)
+                if (arg === '$') {
+                    outputArg = '$$';
+                }
+                return outputArg;
+            })
             .map(arg => wrapInDoubleQuotes(arg))
             .join(', ');
 

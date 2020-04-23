@@ -11,7 +11,12 @@ import gulp from 'gulp';
 import Logs from './log';
 import 'babel-polyfill';
 import {
-    METADATA_DOWNLOAD_URL_FORMAT, FILTERS_DEST, METADATA_I18N_DOWNLOAD_URL_FORMAT, LAST_ADGUARD_FILTER_ID, FILTER_DOWNLOAD_URL_FORMAT, OPTIMIZED_FILTER_DOWNLOAD_URL_FORMAT,
+    METADATA_DOWNLOAD_URL_FORMAT,
+    FILTERS_DEST,
+    METADATA_I18N_DOWNLOAD_URL_FORMAT,
+    LAST_ADGUARD_FILTER_ID,
+    FILTER_DOWNLOAD_URL_FORMAT,
+    OPTIMIZED_FILTER_DOWNLOAD_URL_FORMAT,
 } from './consts';
 
 const CHECKSUM_PATTERN = /^\s*!\s*checksum[\s-:]+([\w\+/=]+).*[\r\n]+/i;
@@ -38,7 +43,7 @@ const filtersList = (browser) => {
         file: 'filters_i18n.json',
     });
 
-    for (let i = 1; i <= LAST_ADGUARD_FILTER_ID; i++) {
+    for (let i = 1; i <= LAST_ADGUARD_FILTER_ID; i += 1) {
         filters.push({
             url: FILTER_DOWNLOAD_URL_FORMAT.replace('%browser', browser).replace('%filter', i),
             file: `filter_${i}.txt`,
@@ -60,11 +65,25 @@ const filtersList = (browser) => {
 };
 
 /**
+ * Normalize response
+ *
+ * @param response Filter rules response
+ * @return Normalized response
+ */
+const normalizeResponse = (response) => {
+    const partOfResponse = response.substring(0, 200);
+    response = response.replace(partOfResponse.match(CHECKSUM_PATTERN)[0], '');
+    response = response.replace(/\r/g, '');
+    response = response.replace(/\n+/g, '\n');
+    return response;
+};
+
+/**
  * Validates filter rules checksum
  * See https://adblockplus.org/en/filters#special-comments for details
  *
  * @param url      Download URL
- * @param response Filter rules response
+ * @param body Filter rules response
  * @throws Error
  */
 const validateChecksum = (url, body) => {
@@ -84,35 +103,6 @@ const validateChecksum = (url, body) => {
     logs.info('checksum is valid');
 };
 
-/**
- * Normalize response
- *
- * @param response Filter rules response
- * @return Normalized response
- */
-const normalizeResponse = (response) => {
-    const partOfResponse = response.substring(0, 200);
-    response = response.replace(partOfResponse.match(CHECKSUM_PATTERN)[0], '');
-    response = response.replace(/\r/g, '');
-    response = response.replace(/\n+/g, '\n');
-    return response;
-};
-
-/**
- * Download filters
- *
- * @param browser Which browser filters to download
- * @param done  stream
- * @return done
- */
-const startDownload = async (browser, done) => {
-    for (const item of filtersList(browser)) {
-        await downloadFilters(item, browser);
-    }
-
-    return done();
-};
-
 const downloadFilters = (url, browser) => {
     const filtersDir = FILTERS_DEST.replace('%browser', browser);
 
@@ -130,6 +120,23 @@ const downloadFilters = (url, browser) => {
         })
             .pipe(fs.createWriteStream(path.join(filtersDir, url.file)));
     });
+};
+
+/**
+ * Download filters
+ *
+ * @param browser Which browser filters to download
+ * @param done  stream
+ * @return done
+ */
+const startDownload = async (browser, done) => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const item of filtersList(browser)) {
+        // eslint-disable-next-line no-await-in-loop
+        await downloadFilters(item, browser);
+    }
+
+    return done();
 };
 
 const chromium = done => startDownload('chromium', done);

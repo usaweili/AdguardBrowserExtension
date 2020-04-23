@@ -41,7 +41,7 @@ const updateLocalScriptRules = (browser, done) => {
         for (let rule of lines) {
             rule = rule.trim();
             if (rule && rule[0] !== '!' && rule.indexOf('#%#') > -1) {
-                let m = rule.split('#%#');
+                const m = rule.split('#%#');
                 m[0] = m[0] === '' ? '<any>' : m[0];
                 // check that rule is not in array already
                 if (!isInArray(rules.rules, m[0], m[1])) {
@@ -54,14 +54,14 @@ const updateLocalScriptRules = (browser, done) => {
         }
     }
 
-    fs.writeFileSync(FILTERS_DEST.replace('%browser', browser) + '/local_script_rules.json', JSON.stringify(rules, null, 4));
+    fs.writeFileSync(`${FILTERS_DEST.replace('%browser', browser)}/local_script_rules.json`, JSON.stringify(rules, null, 4));
 
     return done();
 };
 
-const chromium = (done) => updateLocalScriptRules('chromium', done);
-const edge = (done) => updateLocalScriptRules('edge', done);
-const firefox = (done) => updateLocalScriptRules('firefox', done);
-const operaBrowser = (done) => updateLocalScriptRules('opera', done);
+const chromium = done => updateLocalScriptRules('chromium', done);
+const edge = done => updateLocalScriptRules('edge', done);
+const firefox = done => updateLocalScriptRules('firefox', done);
+const operaBrowser = done => updateLocalScriptRules('opera', done);
 
 export default gulp.series(chromium, edge, firefox, operaBrowser);

@@ -5,6 +5,10 @@ import {
     FIREFOX_WEBEXT, BRANCH_DEV, BRANCH_BETA, BRANCH_RELEASE,
 } from './consts';
 
+export function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 /**
  * Get the extension name postfix
  *
@@ -17,21 +21,21 @@ export function getExtensionNamePostfix(branch, browser, allowRemoteScripts) {
     switch (browser) {
         case FIREFOX_WEBEXT:
             if (allowRemoteScripts) {
-                if (branch == BRANCH_BETA) {
+                if (branch === BRANCH_BETA) {
                     return ' (Standalone)';
-                } if (branch == BRANCH_DEV) {
+                } if (branch === BRANCH_DEV) {
                     return ' (Standalone Dev)';
                 }
             } else {
-                if (branch == BRANCH_BETA) {
+                if (branch === BRANCH_BETA) {
                     return ' (Beta)';
-                } if (branch == BRANCH_DEV) {
+                } if (branch === BRANCH_DEV) {
                     return ' (AMO Dev)';
                 }
             }
             break;
         default:
-            if (branch != BRANCH_RELEASE) {
+            if (branch !== BRANCH_RELEASE) {
                 return ` (${capitalize(branch)})`;
             }
             break;
@@ -94,10 +98,6 @@ export function preprocessAll(dest, data, done) {
     }
 
     return done();
-}
-
-export function capitalize(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export const chunkArray = (arr, size) => arr.reduce((chunks, el, idx) => {

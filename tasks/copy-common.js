@@ -1,11 +1,13 @@
 import path from 'path';
 import gulp from 'gulp';
-import {LOCALES_DIR} from './consts';
+import mergeStream from 'merge-stream';
+import { LOCALES_DIR } from './consts';
 
 const paths = {
-    pages: path.join('Extension/pages/**/*'),
-    lib: path.join('Extension/lib/**/*'),
-    locales: path.join(LOCALES_DIR, '**/*')
+    pages: 'Extension/pages/**/*',
+    lib: 'Extension/lib/**/*',
+    locales: path.join(LOCALES_DIR, '**/*'),
+    modernPages: 'Extension/modern/dist/**/*',
 };
 
 /**
@@ -16,8 +18,18 @@ const paths = {
  * @param {Boolean} exceptLanguages   do not copy languages if true
  * @return stream
  */
-const copyCommonFiles = (pathDest, exceptLanguages) => 
-    gulp.src([paths.lib, paths.pages, ...(exceptLanguages ? [] : [paths.locales])], {base: 'Extension'})
-        .pipe(gulp.dest(pathDest));
+const copyCommonFiles = (pathDest, exceptLanguages) => {
+    const common = gulp.src(
+        [
+            paths.lib,
+            paths.pages,
+            ...(exceptLanguages ? [] : [paths.locales]),
+        ],
+        { base: 'Extension' }
+    ).pipe(gulp.dest(pathDest));
+    const modern = gulp.src(paths.modernPages)
+        .pipe(gulp.dest(path.join(pathDest, 'pages')));
+    return mergeStream(common, modern);
+};
 
 export default copyCommonFiles;

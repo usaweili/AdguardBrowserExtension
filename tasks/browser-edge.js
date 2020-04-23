@@ -20,7 +20,7 @@ import copyCommonFiles from './copy-common';
 import copyExternal from './copy-external';
 
 // set current type of build
-const BRANCH = process.env.NODE_ENV || '';
+const BRANCH = process.env.STAGING_ENV || '';
 
 const paths = {
     edge: path.join('Extension/browser/edge/**/*'),

@@ -40,7 +40,7 @@ const paths = {
     lib: path.join('Extension/lib/**/*'),
     chromeFiles: path.join('Extension/browser/chrome/**/*'),
     webkitFiles: path.join('Extension/browser/webkit/**/*'),
-    dest: path.join(BUILD_DIR, BRANCH, `firefox-standalone-${version}`),
+    dest: path.join(BUILD_DIR, BRANCH, 'firefox-standalone'),
 };
 
 const dest = {
@@ -61,10 +61,10 @@ const firefoxWebext = () => gulp.src([paths.webkitFiles, paths.chromeFiles, path
     .pipe(gulp.dest(paths.dest));
 
 // preprocess with params
-const preprocess = done => preprocessAll(paths.dest, { browser: FIREFOX_WEBEXT, remoteScripts: true }, done);
+const preprocess = (done) => preprocessAll(paths.dest, { browser: FIREFOX_WEBEXT, remoteScripts: true }, done);
 
 // change the extension name based on a type of a build (dev, beta or release)
-const localesProcess = done => updateLocalesMSGName(BRANCH, paths.dest, done, FIREFOX_WEBEXT, true);
+const localesProcess = (done) => updateLocalesMSGName(BRANCH, paths.dest, done, FIREFOX_WEBEXT, true);
 
 const updateManifest = (done) => {
     const manifest = JSON.parse(fs.readFileSync(dest.manifest));
@@ -139,7 +139,7 @@ const createArchive = (done) => {
     }
 
     return gulp.src(dest.inner)
-        .pipe(zip(`firefox-standalone-${BRANCH}-${version}-unsigned.zip`))
+        .pipe(zip(`firefox-standalone-${BRANCH}-unsigned.zip`))
         .pipe(gulp.dest(dest.buildDir))
         // copy artifact in the build dir
         .pipe(rename('firefox.zip'))

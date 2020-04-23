@@ -1,6 +1,6 @@
 {
   "name": "browser-extension",
-  "version": "3.4.21",
+  "version": "3.4.22",
   "description": "AdGuard Extension",
   "scripts": {
     "webpack": "webpack --config tasks/webpack-config/webpack.common.js",
@@ -63,9 +63,9 @@
     "preprocess": "^3.1.0",
     "punycode": "^2.1.0",
     "qunit": "^2.6.0",
-    "scriptlets": "https://github.com/AdguardTeam/Scriptlets.git#v1.1.13",
-    "web-ext": "^2.6.0",
     "webpack": "^4.43.0",
+    "scriptlets": "https://github.com/AdguardTeam/Scriptlets.git#v1.1.15",
+    "web-ext": "^2.6.0",
     "webpack-cli": "^3.3.11"
   }
 }

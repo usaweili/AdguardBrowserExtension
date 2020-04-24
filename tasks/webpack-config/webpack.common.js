@@ -5,14 +5,14 @@ const SRC_PATH = '../../Extension/modern/src';
 const DIST_PATH = '../../Extension/modern/dist';
 
 // Set staging value
-const { STAGING_ENV } = process.env;
+const { BUILD_ENV } = process.env;
 const ENVS = {
     DEV: 'dev',
     BETA: 'beta',
     RELEASE: 'release',
 };
 
-const IS_DEV = STAGING_ENV ? STAGING_ENV === ENVS.DEV : true;
+const IS_DEV = BUILD_ENV ? BUILD_ENV === ENVS.DEV : true;
 const OPTIONS_PATH = path.resolve(__dirname, SRC_PATH, 'pages/options');
 
 const config = {

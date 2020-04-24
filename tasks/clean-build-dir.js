@@ -7,7 +7,7 @@ import del from 'del';
 import { BUILD_DIR } from './consts';
 import { version } from './parse-package';
 
-const BRANCH = process.env.STAGING_ENV || '';
+const BRANCH = process.env.BUILD_ENV || '';
 
 const paths = [
     path.join(BUILD_DIR, BRANCH, 'chrome'),

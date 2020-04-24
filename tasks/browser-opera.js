@@ -16,7 +16,7 @@ import {
 import { version } from './parse-package';
 
 // set current type of build
-const BRANCH = process.env.STAGING_ENV || '';
+const BRANCH = process.env.BUILD_ENV || '';
 
 const paths = {
     filtersOpera: path.join('Extension/filters/opera/**/*'),

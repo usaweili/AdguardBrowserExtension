@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AddCustomModal from '../AddCustomModal';
 import './empty-custom.pcss';
 
+// TODO rewrite to functional component
 class EmptyCustom extends Component {
     state = {
         modalIsOpen: false,

@@ -54,6 +54,7 @@ const defaultState = {
     filterToAdd: {},
 };
 
+// TODO rewrite to functional component
 class AddCustomModal extends Component {
     state = {
         ...defaultState,

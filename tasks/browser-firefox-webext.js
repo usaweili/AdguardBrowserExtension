@@ -31,7 +31,7 @@ import copyCommonFiles from './copy-common';
 import copyExternal from './copy-external';
 
 // set current type of build
-const BRANCH = process.env.STAGING_ENV || '';
+const BRANCH = process.env.BUILD_ENV || '';
 
 const paths = {
     firefox_webext: path.join('Extension/browser/firefox_webext/**/*'),
@@ -72,7 +72,7 @@ const updateManifest = (done) => {
 
     let extensionID = '';
 
-    switch (process.env.STAGING_ENV) {
+    switch (process.env.BUILD_ENV) {
         case BRANCH_BETA:
             extensionID = FIREFOX_EXTENSION_ID_BETA;
             break;
@@ -80,7 +80,7 @@ const updateManifest = (done) => {
             extensionID = FIREFOX_EXTENSION_ID_DEV;
             break;
         default:
-            throw new Error(`This task used only in dev and beta builds and received: ${process.env.STAGING_ENV}`);
+            throw new Error(`This task used only in dev and beta builds and received: ${process.env.BUILD_ENV}`);
     }
 
     manifest.applications.gecko.id = extensionID;

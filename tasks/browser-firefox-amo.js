@@ -31,7 +31,7 @@ import copyCommonFiles from './copy-common';
 import copyExternal from './copy-external';
 
 // set current type of build
-const BRANCH = process.env.STAGING_ENV || '';
+const BRANCH = process.env.BUILD_ENV || '';
 
 const paths = {
     firefox_webext: path.join('Extension/browser/firefox_webext/**/*'),

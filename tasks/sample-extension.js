@@ -96,7 +96,7 @@ const API_SCRIPTS = [
 ];
 
 // set current type of build
-const BRANCH = process.env.STAGING_ENV || '';
+const BRANCH = process.env.BUILD_ENV || '';
 
 const paths = {
     sample: path.join('Extension/api/sample-extension/**/*'),

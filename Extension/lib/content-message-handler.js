@@ -51,7 +51,7 @@
      */
     function processInitializeFrameScriptRequest() {
 
-        var enabledFilters = Object.create(null);
+        var enabledFilters = processInitializeFrameScriptRequestObject.create(null);
 
         var AntiBannerFiltersId = adguard.utils.filters.ids;
 
@@ -85,6 +85,15 @@
                 AntiBannerFiltersId: adguard.utils.filters.ids,
                 EventNotifierTypes: adguard.listeners.events,
             },
+        };
+    }
+
+    /**
+     * Constructs objects that is used on options page
+     */
+    function processGetOptionsData() {
+        return {
+            settings: adguard.settings.getAllSettings(),
         };
     }
 
@@ -130,6 +139,8 @@
                 break;
             case 'initializeFrameScript':
                 return processInitializeFrameScriptRequest();
+            case 'getOptionsData':
+                return processGetOptionsData();
             case 'changeUserSetting':
                 adguard.settings.setProperty(message.key, message.value);
                 break;

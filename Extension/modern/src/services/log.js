@@ -1,4 +1,5 @@
-// TODO for release change level to less verbose
+// TODO change to less verbose log level in release
+// TODO consider removing, because we already have same methods
 const CURRENT_LEVEL = 'DEBUG';
 
 const LEVELS = {

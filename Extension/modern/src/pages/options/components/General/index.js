@@ -1,8 +1,10 @@
-import React, { Fragment, Component } from 'react';
+import React, { useContext } from 'react';
+import { observer } from 'mobx-react';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
 import Setting from '../Settings/Setting';
-import messenger from '../../../../services/messenger';
+import rootStore from '../../stores';
+import log from '../../../../services/log';
 
 const filtersUpdatePeriodOptions = [48, 24, 12, 6, 1, 0].map((hours) => {
     const MS_IN_HOUR = 1000 * 60 * 60;
@@ -97,152 +99,86 @@ const GENERAL_SETTINGS = {
     },
 };
 
-class General extends Component {
-    state = {};
+const General = observer(() => {
+    const {
+        settingsStore,
+    } = useContext(rootStore);
 
-    async componentDidMount() {
-        this._isMounted = true;
-        let settings;
-        const requiredSettingsIds = Object.keys(GENERAL_SETTINGS.settings);
+    const { settings } = settingsStore;
+
+    const handleSettingChange = async ({ id, data }) => {
         try {
-            settings = await messenger.getSettingsByIds(requiredSettingsIds);
+            await settingsStore.updateSetting(id, data);
         } catch (e) {
-            console.log(e);
+            log.error(e);
         }
-        if (!this._isMounted) {
-            return;
-        }
-        this.setState({ settings });
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false;
-    }
-
-    handleSettingChange = async ({ id, data }) => {
-        try {
-            await messenger.updateSetting(id, data);
-            console.log(`Settings ${id} was changed to ${data}`);
-        } catch (e) {
-            console.log(e);
-            // TODO handle errors;
-            return;
-        }
-        this.setState((state) => {
-            const { settings } = state;
-            const setting = settings[id];
-            const updatedSetting = {
-                ...setting,
-                value: data,
-            };
-            return {
-                ...state,
-                settings: {
-                    ...settings,
-                    [id]: updatedSetting,
-                },
-            };
-        });
     };
 
-    renderSettings = (settingsIds) => {
-        const settingsData = this.state.settings;
-        const settingsMeta = settingsIds.map(settingId => GENERAL_SETTINGS.settings[settingId]);
+    const renderSettings = (settingsIds) => {
+        const settingsData = settings;
+        const settingsMeta = settingsIds.map((settingId) => GENERAL_SETTINGS.settings[settingId]);
         const enrichedSettings = settingsMeta.map((settingMeta) => {
             const settingData = settingsData[settingMeta.id];
             return { ...settingMeta, ...settingData };
         });
-        return enrichedSettings.map(setting => (
-            <Setting key={setting.id} setting={setting} handler={this.handleSettingChange} />
+        return enrichedSettings.map((setting) => (
+            <Setting key={setting.id} setting={setting} handler={handleSettingChange} />
         ));
     };
 
-    renderSets = setsIds => setsIds.map((setId) => {
+    const renderSets = (setsIds) => setsIds.map((setId) => {
         const set = GENERAL_SETTINGS.sets[setId];
         return (
             <SettingsSet key={set.id} {...set}>
-                {this.renderSettings(set.settings)}
+                {renderSettings(set.settings)}
             </SettingsSet>
         );
     });
 
-    renderSections = () => {
-        const sectionsOrder = ['general', 'browsingSecurity'];
-        return sectionsOrder.map((sectionId) => {
+    const renderSections = () => {
+        const sections = ['general', 'browsingSecurity'];
+        return sections.map((sectionId) => {
             const section = GENERAL_SETTINGS.sections[sectionId];
             return (
                 <SettingsSection
                     key={section.id}
                     {...section}
                 >
-                    {this.renderSets(section.sets)}
+                    {renderSets(section.sets)}
                 </SettingsSection>
             );
         });
     };
 
-    handleImportSettings = async () => {
-        let result;
-        try {
-            result = await messenger.importSettings();
-        } catch (e) {
-            // TODO show flash notification
-            console.log(e);
-        }
-
-        if (!result) {
-            console.log('was unable to import settings');
-            return;
-        }
-
-        let settings;
-        const requiredSettingsIds = Object.keys(GENERAL_SETTINGS.settings);
-        try {
-            settings = await messenger.getSettingsByIds(requiredSettingsIds);
-        } catch (e) {
-            console.log(e);
-        }
-        this.setState(settings);
+    const handleImportSettings = async () => {
+        // TODO
     };
 
-    handleExportSettings = async () => {
-        let result;
-        try {
-            result = await messenger.exportSettings();
-        } catch (e) {
-            console.log(e);
-        }
-        if (result) {
-            console.log('settings exported successfully');
-        } else {
-            console.log('was unable to export settings');
-        }
+    const handleExportSettings = async () => {
+        // TODO
     };
 
-    render() {
-        const { settings } = this.state;
-        return (
-            <Fragment>
-                <h2 className="title">Settings</h2>
-                {settings
-                && this.renderSections()}
-                <button
-                    type="button"
-                    className="button button--m button--green content__btn"
-                    onClick={this.handleExportSettings}
-                >
-                    Export settings
-                </button>
-                <button
-                    type="button"
-                    className="button button--m button--green-bd content__btn"
-                    onClick={this.handleImportSettings}
-                >
-                    Import settings
-                </button>
-            </Fragment>
-        );
-    }
-}
+    return (
+        <>
+            <h2 className="title">Settings</h2>
+            {settings
+                && renderSections()}
+            <button
+                type="button"
+                className="button button--m button--green content__btn"
+                onClick={handleExportSettings}
+            >
+                Export settings
+            </button>
+            <button
+                type="button"
+                className="button button--m button--green-bd content__btn"
+                onClick={handleImportSettings}
+            >
+                Import settings
+            </button>
+        </>
+    );
+});
 
 export default General;

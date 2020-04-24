@@ -1,5 +1,9 @@
-import React from 'react';
+import React, {
+    useContext,
+    useEffect,
+} from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
+import { observer } from 'mobx-react';
 import '../../styles/styles.pcss';
 
 import General from '../General';
@@ -12,7 +16,21 @@ import Miscellaneous from '../Miscellaneous';
 import About from '../About';
 import Footer from '../Footer/Footer';
 
-function App() {
+import rootStore from '../../stores';
+
+const App = observer(() => {
+    const { settingsStore } = useContext(rootStore);
+
+    useEffect(() => {
+        (async () => {
+            await settingsStore.requestOptionsData();
+        })();
+    }, []);
+
+    if (!settingsStore.optionsReadyToRender) {
+        return null;
+    }
+
     return (
         <HashRouter hashType="noslash">
             <div className="page container">
@@ -33,6 +51,6 @@ function App() {
             <Footer />
         </HashRouter>
     );
-}
+});
 
 export default App;

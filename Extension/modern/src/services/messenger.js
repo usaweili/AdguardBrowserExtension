@@ -18,78 +18,11 @@ class Messenger {
         return response;
     }
 
-    // TODO [maximtop] fix methods
-    async getAppVersion() {
-        const settingsService = await this.getSettingsService();
-        return settingsService.appVersion;
-    }
-
-    async getSettingsByIds(ids) {
-        const settingsService = await this.getSettingsService();
-        return settingsService.getSettingsByIds(ids);
-    }
-
-    async updateSetting(id, value) {
-        const settingsService = await this.getSettingsService();
-        return settingsService.updateSetting(id, value);
-    }
-
-    async getFiltersData() {
-        const settingsService = await this.getSettingsService();
-        return settingsService.getFiltersData();
-    }
-
-    async getFiltersInfo() {
-        const settingsService = await this.getSettingsService();
-        return settingsService.getFiltersInfo();
-    }
-
-    async updateFilters() {
-        const settingsService = await this.getSettingsService();
-        return settingsService.updateFilters();
-    }
-
-    async updateGroupStatus(id, value) {
-        const settingsService = await this.getSettingsService();
-        return settingsService.updateGroupStatus(id, value);
-    }
-
-    async updateFilterStatus(id, value) {
-        const settingsService = await this.getSettingsService();
-        return settingsService.updateFilterStatus(id, value);
-    }
-
-    async checkCustomUrl(url) {
-        const settingsService = await this.getSettingsService();
-        return settingsService.checkCustomUrl(url);
-    }
-
-    async addCustomFilter(url) {
-        const settingsService = await this.getSettingsService();
-        return settingsService.addCustomFilter(url);
-    }
-
-    async importSettings() {
-        const settingsService = await this.getSettingsService();
-        return settingsService.importSettings();
-    }
-
-    async exportSettings() {
-        const settingsService = await this.getSettingsService();
-        return settingsService.exportSettings();
-    }
-
-    async openFilteringLog() {
-        const settingsService = await this.getSettingsService();
-        return settingsService.openFilteringLog();
-    }
-
-    async resetStatistics() {
-        const settingsService = await this.getSettingsService();
-        return settingsService.resetStatistics();
+    async getOptionsData() {
+        return this.sendMessage('getOptionsData');
     }
 }
 
-const background = new Messenger();
+const messenger = new Messenger();
 
-export default background;
+export default messenger;

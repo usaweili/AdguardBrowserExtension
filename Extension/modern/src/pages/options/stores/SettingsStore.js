@@ -26,6 +26,14 @@ class SettingsStore {
             this.optionsReadyToRender = true;
         });
     }
+
+    @action
+    async updateSetting(settingId, value) {
+        await messenger.changeUserSetting(settingId, value);
+        runInAction(() => {
+            this.settings.values[settingId] = value;
+        });
+    }
 }
 
 export default SettingsStore;

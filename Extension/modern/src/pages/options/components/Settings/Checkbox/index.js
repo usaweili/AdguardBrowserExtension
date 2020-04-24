@@ -1,33 +1,24 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './checkbox.pcss';
 
 function Checkbox(props) {
     const {
-        id, value, handler,
+        id, handler, inverted,
     } = props;
 
-    const checkbox = React.createRef();
+    let { value } = props;
 
-    useEffect(() => {
-        const settingWrapper = checkbox.current.closest('.setting');
-        if (!value) {
-            settingWrapper.classList.add('setting--disabled');
-        }
-    }, []);
+    value = inverted ? !value : value;
 
     const changeHandler = (e) => {
-        const settingWrapper = e.target.closest('.setting');
         const { target: { name: id, checked: data } } = e;
-        handler({ id, data });
-        if (data) settingWrapper.classList.remove('setting--disabled');
-        if (!data) settingWrapper.classList.add('setting--disabled');
+        handler({ id, data: inverted ? !data : data });
     };
 
     return (
         <div
             className="checkbox"
-            ref={checkbox}
         >
             <input
                 type="checkbox"
@@ -47,11 +38,13 @@ function Checkbox(props) {
 
 Checkbox.defaultProps = {
     value: false,
+    inverted: false,
 };
 
 Checkbox.propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     value: PropTypes.bool,
+    inverted: PropTypes.bool,
     handler: PropTypes.func.isRequired,
 };
 

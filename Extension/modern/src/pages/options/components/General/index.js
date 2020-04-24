@@ -38,8 +38,6 @@ const General = observer(() => {
         return null;
     }
 
-    console.log(settings.names);
-
     const GENERAL_SETTINGS = {
         sections: {
             general: {
@@ -89,6 +87,7 @@ const General = observer(() => {
             },
         },
         settings: {
+            // TODO add special handler
             allowAcceptableAds: {
                 id: 'allowAcceptableAds',
                 type: 'checkbox',
@@ -96,10 +95,12 @@ const General = observer(() => {
             [settings.names.DISABLE_SHOW_PAGE_STATS]: {
                 id: settings.names.DISABLE_SHOW_PAGE_STATS,
                 type: 'checkbox',
+                inverted: true,
             },
             [settings.names.DISABLE_DETECT_FILTERS]: {
                 id: settings.names.DISABLE_DETECT_FILTERS,
                 type: 'checkbox',
+                inverted: true,
             },
             [settings.names.FILTERS_UPDATE_PERIOD]: {
                 id: settings.names.FILTERS_UPDATE_PERIOD,
@@ -109,10 +110,12 @@ const General = observer(() => {
             [settings.names.DISABLE_SAFEBROWSING]: {
                 id: settings.names.DISABLE_SAFEBROWSING,
                 type: 'checkbox',
+                inverted: true,
             },
             [settings.names.DISABLE_SEND_SAFEBROWSING_STATS]: {
                 id: settings.names.DISABLE_SEND_SAFEBROWSING_STATS,
                 type: 'checkbox',
+                inverted: true,
             },
         },
     };
@@ -132,7 +135,6 @@ const General = observer(() => {
                 const value = settings.values[settingMeta.id];
                 return { ...settingMeta, value };
             });
-        console.log(enrichedSettings);
         return enrichedSettings.map((setting) => (
             <Setting key={setting.id} setting={setting} handler={handleSettingChange} />
         ));
@@ -141,7 +143,7 @@ const General = observer(() => {
     const renderSets = (setsIds) => setsIds.map((setId) => {
         const set = GENERAL_SETTINGS.sets[setId];
         return (
-            <SettingsSet key={set.id} {...set}>
+            <SettingsSet key={set.id} title={set.title} description={set.description}>
                 {renderSettings(set.settings)}
             </SettingsSet>
         );
@@ -154,7 +156,7 @@ const General = observer(() => {
             return (
                 <SettingsSection
                     key={section.id}
-                    {...section}
+                    title={section.title}
                 >
                     {renderSets(section.sets)}
                 </SettingsSection>

@@ -14,8 +14,7 @@ function SettingsSet(props) {
                         <div className="setting__desc">
                             {description}
                         </div>
-                    ) : ''
-                }
+                    ) : ''}
                 {children}
             </div>
         </div>

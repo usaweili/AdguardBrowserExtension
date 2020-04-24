@@ -21,6 +21,11 @@ class Messenger {
     async getOptionsData() {
         return this.sendMessage('getOptionsData');
     }
+
+    async changeUserSetting(settingId, value) {
+        // TODO refactor message handler to use common message format { type, data }
+        await browser.runtime.sendMessage({ type: 'changeUserSetting', key: settingId, value });
+    }
 }
 
 const messenger = new Messenger();

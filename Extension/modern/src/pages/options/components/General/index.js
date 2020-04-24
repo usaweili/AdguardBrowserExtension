@@ -7,24 +7,122 @@ import rootStore from '../../stores';
 import log from '../../../../services/log';
 import i18n from '../../../../services/i18n';
 
-// TODO here should be an default option also
-const filtersUpdatePeriodOptions = [48, 24, 12, 6, 1, 0, -1].map((hours) => {
+const hoursToMs = (hours) => {
     const MS_IN_HOUR = 1000 * 60 * 60;
-    let optionTitle;
-    // TODO translate options
-    if (hours > 1) {
-        optionTitle = `${hours} hours`;
-    } else if (hours === 1) {
-        optionTitle = `${hours} hour`;
-    } else if (hours === 0) {
-        optionTitle = 'Disabled';
-    } else if (hours === -1) {
-        optionTitle = 'Default';
-    }
-    return {
-        value: hours * MS_IN_HOUR,
-        title: optionTitle,
-    };
+    return hours * MS_IN_HOUR;
+};
+
+const filtersUpdatePeriodOptions = [
+    {
+        value: -1,
+        title: i18n.translate('options_select_update_period_default'),
+    },
+    {
+        value: hoursToMs(48),
+        title: i18n.translate('options_select_update_period_48h'),
+    },
+    {
+        value: hoursToMs(24),
+        title: i18n.translate('options_select_update_period_24h'),
+    },
+    {
+        value: hoursToMs(12),
+        title: i18n.translate('options_select_update_period_12h'),
+    },
+    {
+        value: hoursToMs(6),
+        title: i18n.translate('options_select_update_period_6h'),
+    },
+    {
+        value: hoursToMs(1),
+        title: i18n.translate('options_select_update_period_1h'),
+    },
+    {
+        value: 0,
+        title: i18n.translate('options_select_update_period_disabled'),
+    },
+];
+
+const getSettingsMap = (settings) => ({
+    sections: {
+        general: {
+            id: 'general',
+            title: i18n.translate('context_general_settings'),
+            sets: ['allowAcceptableAds', 'showPageStatistic', 'filtersAutodetect', 'filtersUpdatePeriod'],
+        },
+        browsingSecurity: {
+            id: 'browsingSecurity',
+            title: i18n.translate('context_safebrowsing'),
+            sets: ['safebrowsingEnabled', 'sendSafebrowsingStats'],
+        },
+    },
+    sets: {
+        allowAcceptableAds: {
+            id: 'allowAcceptableAds',
+            title: i18n.translate('options_allow_acceptable_ads'),
+            description: i18n.translate('options_learn_more'), // TODO add link here
+            settings: ['allowAcceptableAds'],
+        },
+        showPageStatistic: {
+            id: 'showPageStatistic',
+            title: i18n.translate('options_show_blocked_ads_count'),
+            settings: [settings.names.DISABLE_SHOW_PAGE_STATS],
+        },
+        filtersAutodetect: {
+            id: 'filtersAutodetect',
+            title: i18n.translate('options_enable_autodetect_filter'),
+            settings: [settings.names.DISABLE_DETECT_FILTERS],
+        },
+        filtersUpdatePeriod: {
+            id: 'filtersUpdatePeriod',
+            title: i18n.translate('options_set_update_interval'),
+            settings: [settings.names.FILTERS_UPDATE_PERIOD],
+        },
+        safebrowsingEnabled: {
+            id: 'safebrowsingEnabled',
+            title: i18n.translate('options_safebrowsing_enabled'),
+            description: i18n.translate('options_learn_more'), // TODO add link here
+            settings: [settings.names.DISABLE_SAFEBROWSING],
+        },
+        sendSafebrowsingStats: {
+            id: 'sendSafebrowsingStats',
+            title: i18n.translate('options_safebrowsing_help'),
+            description: i18n.translate('options_safebrowsing_help_desc'),
+            settings: [settings.names.DISABLE_SEND_SAFEBROWSING_STATS],
+        },
+    },
+    settings: {
+        // TODO add special handler
+        allowAcceptableAds: {
+            id: 'allowAcceptableAds',
+            type: 'checkbox',
+        },
+        [settings.names.DISABLE_SHOW_PAGE_STATS]: {
+            id: settings.names.DISABLE_SHOW_PAGE_STATS,
+            type: 'checkbox',
+            inverted: true,
+        },
+        [settings.names.DISABLE_DETECT_FILTERS]: {
+            id: settings.names.DISABLE_DETECT_FILTERS,
+            type: 'checkbox',
+            inverted: true,
+        },
+        [settings.names.FILTERS_UPDATE_PERIOD]: {
+            id: settings.names.FILTERS_UPDATE_PERIOD,
+            type: 'select',
+            options: filtersUpdatePeriodOptions,
+        },
+        [settings.names.DISABLE_SAFEBROWSING]: {
+            id: settings.names.DISABLE_SAFEBROWSING,
+            type: 'checkbox',
+            inverted: true,
+        },
+        [settings.names.DISABLE_SEND_SAFEBROWSING_STATS]: {
+            id: settings.names.DISABLE_SEND_SAFEBROWSING_STATS,
+            type: 'checkbox',
+            inverted: true,
+        },
+    },
 });
 
 const General = observer(() => {
@@ -38,87 +136,7 @@ const General = observer(() => {
         return null;
     }
 
-    const GENERAL_SETTINGS = {
-        sections: {
-            general: {
-                id: 'general',
-                title: i18n.translate('context_general_settings'),
-                sets: ['allowAcceptableAds', 'showPageStatistic', 'filtersAutodetect', 'filtersUpdatePeriod'],
-            },
-            browsingSecurity: {
-                id: 'browsingSecurity',
-                title: i18n.translate('context_safebrowsing'),
-                sets: ['safebrowsingEnabled', 'sendSafebrowsingStats'],
-            },
-        },
-        sets: {
-            allowAcceptableAds: {
-                id: 'allowAcceptableAds',
-                title: i18n.translate('options_allow_acceptable_ads'),
-                description: i18n.translate('options_learn_more'), // TODO add link here
-                settings: ['allowAcceptableAds'],
-            },
-            showPageStatistic: {
-                id: 'showPageStatistic',
-                title: i18n.translate('options_show_blocked_ads_count'),
-                settings: [settings.names.DISABLE_SHOW_PAGE_STATS],
-            },
-            filtersAutodetect: {
-                id: 'filtersAutodetect',
-                title: i18n.translate('options_enable_autodetect_filter'),
-                settings: [settings.names.DISABLE_DETECT_FILTERS],
-            },
-            filtersUpdatePeriod: {
-                id: 'filtersUpdatePeriod',
-                title: i18n.translate('options_set_update_interval'),
-                settings: [settings.names.FILTERS_UPDATE_PERIOD],
-            },
-            safebrowsingEnabled: {
-                id: 'safebrowsingEnabled',
-                title: i18n.translate('options_safebrowsing_enabled'),
-                description: i18n.translate('options_learn_more'), // TODO add link here
-                settings: [settings.names.DISABLE_SAFEBROWSING],
-            },
-            sendSafebrowsingStats: {
-                id: 'sendSafebrowsingStats',
-                title: i18n.translate('options_safebrowsing_help'),
-                description: i18n.translate('options_safebrowsing_help_desc'),
-                settings: [settings.names.DISABLE_SEND_SAFEBROWSING_STATS],
-            },
-        },
-        settings: {
-            // TODO add special handler
-            allowAcceptableAds: {
-                id: 'allowAcceptableAds',
-                type: 'checkbox',
-            },
-            [settings.names.DISABLE_SHOW_PAGE_STATS]: {
-                id: settings.names.DISABLE_SHOW_PAGE_STATS,
-                type: 'checkbox',
-                inverted: true,
-            },
-            [settings.names.DISABLE_DETECT_FILTERS]: {
-                id: settings.names.DISABLE_DETECT_FILTERS,
-                type: 'checkbox',
-                inverted: true,
-            },
-            [settings.names.FILTERS_UPDATE_PERIOD]: {
-                id: settings.names.FILTERS_UPDATE_PERIOD,
-                type: 'select',
-                options: filtersUpdatePeriodOptions,
-            },
-            [settings.names.DISABLE_SAFEBROWSING]: {
-                id: settings.names.DISABLE_SAFEBROWSING,
-                type: 'checkbox',
-                inverted: true,
-            },
-            [settings.names.DISABLE_SEND_SAFEBROWSING_STATS]: {
-                id: settings.names.DISABLE_SEND_SAFEBROWSING_STATS,
-                type: 'checkbox',
-                inverted: true,
-            },
-        },
-    };
+    const settingsMap = getSettingsMap(settings);
 
     const handleSettingChange = async ({ id, data }) => {
         try {
@@ -130,7 +148,7 @@ const General = observer(() => {
 
     const renderSettings = (settingsIds) => {
         const enrichedSettings = settingsIds
-            .map((settingId) => GENERAL_SETTINGS.settings[settingId])
+            .map((settingId) => settingsMap.settings[settingId])
             .map((settingMeta) => {
                 const value = settings.values[settingMeta.id];
                 return { ...settingMeta, value };
@@ -141,7 +159,7 @@ const General = observer(() => {
     };
 
     const renderSets = (setsIds) => setsIds.map((setId) => {
-        const set = GENERAL_SETTINGS.sets[setId];
+        const set = settingsMap.sets[setId];
         return (
             <SettingsSet key={set.id} title={set.title} description={set.description}>
                 {renderSettings(set.settings)}
@@ -152,7 +170,7 @@ const General = observer(() => {
     const renderSections = () => {
         const sections = ['general', 'browsingSecurity'];
         return sections.map((sectionId) => {
-            const section = GENERAL_SETTINGS.sections[sectionId];
+            const section = settingsMap.sections[sectionId];
             return (
                 <SettingsSection
                     key={section.id}

@@ -21,6 +21,7 @@ const About = observer(() => {
     const currentYear = new Date().getFullYear();
     const copyRightText = `© 2009-${currentYear} AdGuard Software Ltd.`;
 
+    // TODO add translations to every string
     return (
         <>
             <h2 className="title">About</h2>

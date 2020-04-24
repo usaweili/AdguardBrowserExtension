@@ -5,6 +5,7 @@ import SettingsSet from '../Settings/SettingsSet';
 import Setting from '../Settings/Setting';
 import rootStore from '../../stores';
 import log from '../../../../services/log';
+import i18n from '../../../../services/i18n';
 
 const filtersUpdatePeriodOptions = [48, 24, 12, 6, 1, 0].map((hours) => {
     const MS_IN_HOUR = 1000 * 60 * 60;
@@ -26,47 +27,47 @@ const GENERAL_SETTINGS = {
     sections: {
         general: {
             id: 'general',
-            title: 'General',
+            title: i18n.translate('context_general_settings'),
             sets: ['allowAcceptableAds', 'showPageStatistic', 'filtersAutodetect', 'filtersUpdatePeriod'],
         },
         browsingSecurity: {
             id: 'browsingSecurity',
-            title: 'Browsing security',
+            title: i18n.translate('context_safebrowsing'),
             sets: ['safebrowsingEnabled', 'sendSafebrowsingStats'],
         },
     },
     sets: {
         allowAcceptableAds: {
             id: 'allowAcceptableAds',
-            title: 'Allow search ads and the self-promotion of websites',
-            description: 'Learn more about it',
+            title: i18n.translate('options_allow_acceptable_ads'),
+            description: i18n.translate('options_learn_more'), // TODO add link here
             settings: ['allowAcceptableAds'],
         },
         showPageStatistic: {
             id: 'showPageStatistic',
-            title: 'Indicate the number of blocked ads on the AdGuard extension icon',
+            title: i18n.translate('options_show_blocked_ads_count'),
             settings: ['showPageStatistic'],
         },
         filtersAutodetect: {
             id: 'filtersAutodetect',
-            title: 'Activate the most appropriate filters automatically',
+            title: i18n.translate('options_enable_autodetect_filter'),
             settings: ['filtersAutodetect'],
         },
         filtersUpdatePeriod: {
             id: 'filtersUpdatePeriod',
-            title: 'Filters update interval',
+            title: i18n.translate('options_set_update_interval'),
             settings: ['filtersUpdatePeriod'],
         },
         safebrowsingEnabled: {
             id: 'safebrowsingEnabled',
-            title: 'Phishing and malware protection',
-            description: 'Learn more about it',
+            title: i18n.translate('options_safebrowsing_enabled'),
+            description: i18n.translate('options_learn_more'), // TODO add link here
             settings: ['safebrowsingEnabled'],
         },
         sendSafebrowsingStats: {
             id: 'sendSafebrowsingStats',
-            title: 'Help us develop Browsing security filters',
-            description: 'Submit anonymous security-related information',
+            title: i18n.translate('options_safebrowsing_help'),
+            description: i18n.translate('options_safebrowsing_help_desc'),
             settings: ['sendSafebrowsingStats'],
         },
     },

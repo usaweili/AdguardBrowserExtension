@@ -1,79 +1,81 @@
-import React, { Component, Fragment } from 'react';
-import messenger from '../../../../services/messenger';
+import React, { useContext } from 'react';
+import { observer } from 'mobx-react';
 import './about-page.pcss';
+import rootStore from '../../stores';
+import {
+    ACKNOWLEDGMENTS_URL,
+    EULA_URL,
+    GITHUB_URL,
+    PRIVACY_URL,
+} from '../../../../constants';
 
-export default class About extends Component {
-    state = {};
+const About = observer(() => {
+    const { settingsStore } = useContext(rootStore);
 
-    async componentDidMount() {
-        let version;
-        try {
-            version = await messenger.getAppVersion();
-        } catch (e) {
-            console.log(e);
-        }
-        this.setState(state => ({ ...state, version }));
+    const { version } = settingsStore;
+
+    if (!version) {
+        return null;
     }
 
-    render() {
-        const { version } = this.state;
-        if (!version) {
-            return '';
-        }
-        return (
-            <Fragment>
-                <h2 className="title">About</h2>
-                <div className="about">
-                    <div className="logo about__logo" />
-                    <div className="about__version">
-                        Version
-                        {' '}
-                        {version}
+    const currentYear = new Date().getFullYear();
+    const copyRightText = `© 2009-${currentYear} AdGuard Software Ltd.`;
+
+    return (
+        <>
+            <h2 className="title">About</h2>
+            <div className="about">
+                <div className="logo about__logo" />
+                <div className="about__version">
+                    Version
+                    {' '}
+                    {version}
+                </div>
+                <div className="about__copyright">
+                    <div className="about__copyright-item">
+                        {copyRightText}
                     </div>
-                    <div className="about__copyright">
-                        <div className="about__copyright-item">
-                            © 2009-2019 AdGuard Software Ltd.
-                        </div>
-                        <div className="about__copyright-item">
-                            All rights reserved.
-                        </div>
-                    </div>
-                    <div className="about__menu">
-                        <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href="https://adguard.com/forward.html?action=eula&amp;from=options_screen&amp;app=browser_extension"
-                            className="about__menu-item"
-                        >
-                            End-User License Agreement
-                        </a>
-                        <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href="https://adguard.com/forward.html?action=privacy&amp;from=options_screen&amp;app=browser_extension"
-                            className="about__menu-item"
-                        >
-                            Privacy Policy
-                        </a>
-                        <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href="https://adguard.com/forward.html?action=acknowledgments&amp;from=options_screen&amp;app=browser_extension"
-                            className="about__menu-item"
-                        >
-                            Acknowledgments
-                        </a>
-                        <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href="https://adguard.com/forward.html?action=github_options&amp;from=options_screen&amp;app=browser_extension"
-                            className="about__menu-item"
-                        >
-                            Github
-                        </a>
+                    <div className="about__copyright-item">
+                        All rights reserved.
                     </div>
                 </div>
-            </Fragment>
-        );
-    }
-}
+                <div className="about__menu">
+                    <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={EULA_URL}
+                        className="about__menu-item"
+                    >
+                        End-User License Agreement
+                    </a>
+                    <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={PRIVACY_URL}
+                        className="about__menu-item"
+                    >
+                        Privacy Policy
+                    </a>
+                    <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={ACKNOWLEDGMENTS_URL}
+                        className="about__menu-item"
+                    >
+                        Acknowledgments
+                    </a>
+                    <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={GITHUB_URL}
+                        className="about__menu-item"
+                    >
+                        Github
+                    </a>
+                </div>
+            </div>
+        </>
+    );
+});
+
+export default About;

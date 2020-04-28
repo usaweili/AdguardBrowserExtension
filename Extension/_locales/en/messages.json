@@ -642,7 +642,7 @@
         "message": "Allow search ads and the self-promotion of websites"
     },
     "options_show_blocked_ads_count": {
-        "message": "Indicate the number of&nbsp;blocked ads on&nbsp;the AdGuard extension icon"
+        "message": "Indicate the number of blocked ads on the AdGuard extension icon"
     },
     "options_enable_autodetect_filter": {
         "message": "Activate the most appropriate filters automatically"
@@ -693,7 +693,7 @@
         "message": "Phishing and malware protection"
     },
     "options_safebrowsing_help": {
-        "message": "Help&nbsp;us develop the Browsing security filters"
+        "message": "Help us develop the Browsing security filters"
     },
     "options_safebrowsing_help_desc": {
         "message": "Submit anonymous security-related information"
@@ -705,10 +705,10 @@
         "message": "Discuss AdGuard"
     },
     "options_do_you_like": {
-        "message": "Do&nbsp;you like AdGuard?"
+        "message": "Do you like AdGuard?"
     },
     "options_footer_like_us": {
-        "message": "Rate&nbsp;it!"
+        "message": "Rate it!"
     },
     "options_miscellaneous_settings": {
         "message": "Miscellaneous"

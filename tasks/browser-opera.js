@@ -16,12 +16,12 @@ import {
 import { version } from './parse-package';
 
 // set current type of build
-const BRANCH = process.env.NODE_ENV || '';
+const BRANCH = process.env.BUILD_ENV || '';
 
 const paths = {
     filtersOpera: path.join('Extension/filters/opera/**/*'),
-    chromium: path.join(BUILD_DIR, BRANCH, `chrome-${version}`, '**/*'),
-    chromiumManifest: path.join(BUILD_DIR, BRANCH, `chrome-${version}`, 'manifest.json'),
+    chromium: path.join(BUILD_DIR, BRANCH, 'chrome', '**/*'),
+    chromiumManifest: path.join(BUILD_DIR, BRANCH, 'chrome', 'manifest.json'),
     cert: path.join(PRIVATE_FILES, 'certificate.pem'),
     dest: path.join(BUILD_DIR, BRANCH, `opera-${version}`),
 };

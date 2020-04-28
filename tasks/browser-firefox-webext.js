@@ -31,7 +31,7 @@ import copyCommonFiles from './copy-common';
 import copyExternal from './copy-external';
 
 // set current type of build
-const BRANCH = process.env.NODE_ENV || '';
+const BRANCH = process.env.BUILD_ENV || '';
 
 const paths = {
     firefox_webext: path.join('Extension/browser/firefox_webext/**/*'),
@@ -40,7 +40,7 @@ const paths = {
     lib: path.join('Extension/lib/**/*'),
     chromeFiles: path.join('Extension/browser/chrome/**/*'),
     webkitFiles: path.join('Extension/browser/webkit/**/*'),
-    dest: path.join(BUILD_DIR, BRANCH, `firefox-standalone-${version}`),
+    dest: path.join(BUILD_DIR, BRANCH, 'firefox-standalone'),
 };
 
 const dest = {
@@ -61,10 +61,10 @@ const firefoxWebext = () => gulp.src([paths.webkitFiles, paths.chromeFiles, path
     .pipe(gulp.dest(paths.dest));
 
 // preprocess with params
-const preprocess = done => preprocessAll(paths.dest, { browser: FIREFOX_WEBEXT, remoteScripts: true }, done);
+const preprocess = (done) => preprocessAll(paths.dest, { browser: FIREFOX_WEBEXT, remoteScripts: true }, done);
 
 // change the extension name based on a type of a build (dev, beta or release)
-const localesProcess = done => updateLocalesMSGName(BRANCH, paths.dest, done, FIREFOX_WEBEXT, true);
+const localesProcess = (done) => updateLocalesMSGName(BRANCH, paths.dest, done, FIREFOX_WEBEXT, true);
 
 const updateManifest = (done) => {
     const manifest = JSON.parse(fs.readFileSync(dest.manifest));
@@ -72,7 +72,7 @@ const updateManifest = (done) => {
 
     let extensionID = '';
 
-    switch (process.env.NODE_ENV) {
+    switch (process.env.BUILD_ENV) {
         case BRANCH_BETA:
             extensionID = FIREFOX_EXTENSION_ID_BETA;
             break;
@@ -80,7 +80,7 @@ const updateManifest = (done) => {
             extensionID = FIREFOX_EXTENSION_ID_DEV;
             break;
         default:
-            throw new Error(`This task used only in dev and beta builds and received: ${process.env.NODE_ENV}`);
+            throw new Error(`This task used only in dev and beta builds and received: ${process.env.BUILD_ENV}`);
     }
 
     manifest.applications.gecko.id = extensionID;
@@ -139,7 +139,7 @@ const createArchive = (done) => {
     }
 
     return gulp.src(dest.inner)
-        .pipe(zip(`firefox-standalone-${BRANCH}-${version}-unsigned.zip`))
+        .pipe(zip(`firefox-standalone-${BRANCH}-unsigned.zip`))
         .pipe(gulp.dest(dest.buildDir))
         // copy artifact in the build dir
         .pipe(rename('firefox.zip'))

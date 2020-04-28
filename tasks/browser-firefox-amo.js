@@ -31,7 +31,7 @@ import copyCommonFiles from './copy-common';
 import copyExternal from './copy-external';
 
 // set current type of build
-const BRANCH = process.env.NODE_ENV || '';
+const BRANCH = process.env.BUILD_ENV || '';
 
 const paths = {
     firefox_webext: path.join('Extension/browser/firefox_webext/**/*'),
@@ -39,8 +39,8 @@ const paths = {
     chromeFiles: path.join('Extension/browser/chrome/**/*'),
     webkitFiles: path.join('Extension/browser/webkit/**/*'),
     dest: path.join(BUILD_DIR, BRANCH, (BRANCH === BRANCH_DEV)
-        ? `firefox-amo-${version}`
-        : `firefox-amo-${BRANCH}-${version}-unsigned`),
+        ? 'firefox-amo'
+        : `firefox-amo-${BRANCH}-unsigned`),
 };
 
 const dest = {
@@ -48,7 +48,7 @@ const dest = {
     inner: path.join(paths.dest, '**/*'),
     buildDir: path.join(BUILD_DIR, BRANCH),
     manifest: path.join(paths.dest, 'manifest.json'),
-    webext: path.join(BUILD_DIR, BRANCH, `firefox-amo-${BRANCH}-${version}-unsigned.zip`),
+    webext: path.join(BUILD_DIR, BRANCH, `firefox-amo-${BRANCH}-unsigned.zip`),
 };
 
 // copy common files
@@ -63,13 +63,13 @@ const firefoxWebext = () => gulp.src([paths.webkitFiles, paths.chromeFiles, path
     .pipe(gulp.dest(paths.dest));
 
 // preprocess with params
-const preprocess = done => preprocessAll(paths.dest, {
+const preprocess = (done) => preprocessAll(paths.dest, {
     browser: FIREFOX_WEBEXT,
     remoteScripts: false,
 }, done);
 
 // change the extension name based on a type of a build (dev, beta or release)
-const localesProcess = done => updateLocalesMSGName(BRANCH, paths.dest, done, FIREFOX_WEBEXT);
+const localesProcess = (done) => updateLocalesMSGName(BRANCH, paths.dest, done, FIREFOX_WEBEXT);
 
 const updateManifest = (done) => {
     const manifest = JSON.parse(fs.readFileSync(dest.manifest));

@@ -20,14 +20,14 @@ import copyCommonFiles from './copy-common';
 import copyExternal from './copy-external';
 
 // set current type of build
-const BRANCH = process.env.NODE_ENV || '';
+const BRANCH = process.env.BUILD_ENV || '';
 
 const paths = {
     edge: path.join('Extension/browser/edge/**/*'),
     filters: path.join('Extension/filters/edge/**/*'),
     chromeFiles: path.join('Extension/browser/chrome/**/*'),
     webkitFiles: path.join('Extension/browser/webkit/**/*'),
-    dest: path.join(BUILD_DIR, BRANCH, `edge-${version}`),
+    dest: path.join(BUILD_DIR, BRANCH, 'edge'),
 };
 
 const dest = {
@@ -47,10 +47,10 @@ const copyFilters = () => gulp.src(paths.filters).pipe(gulp.dest(dest.filters));
 const edge = () => gulp.src([paths.webkitFiles, paths.chromeFiles, paths.edge]).pipe(gulp.dest(paths.dest));
 
 // preprocess with params
-const preprocess = done => preprocessAll(paths.dest, { browser: 'EDGE', remoteScripts: true }, done);
+const preprocess = (done) => preprocessAll(paths.dest, { browser: 'EDGE', remoteScripts: true }, done);
 
 // change the extension name based on a type of a build (dev, beta or release)
-const localesProcess = done => updateLocalesMSGName(BRANCH, paths.dest, done);
+const localesProcess = (done) => updateLocalesMSGName(BRANCH, paths.dest, done);
 
 // update current version of extension
 const updateManifest = (done) => {
@@ -66,7 +66,7 @@ const createArchive = (done) => {
     }
 
     return gulp.src(dest.inner)
-        .pipe(zip(`edge-${BRANCH}-${version}.zip`))
+        .pipe(zip(`edge-${BRANCH}.zip`))
         .pipe(gulp.dest(dest.buildDir));
 };
 

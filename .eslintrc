@@ -1,9 +1,16 @@
 {
+  "parser": "babel-eslint",
   "env": {
     "browser": true,
     "node": true
   },
-  "extends": "airbnb-base",
+  "extends": ["airbnb", "plugin:react/recommended"],
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    }
+  },
   "globals": {
     "adguard": true,
     "chrome": true,
@@ -101,6 +108,10 @@
     "no-underscore-dangle": "off",
     "max-len": ["error", {
       "code": 120
-    }]
+    }],
+    "react/jsx-indent": ["error", 4],
+    "react/jsx-indent-props": ["error", 4],
+    "react/jsx-filename-extension": [1, { "extensions": [ ".js", ".jsx" ]}],
+    "class-methods-use-this": "off"
   }
 }

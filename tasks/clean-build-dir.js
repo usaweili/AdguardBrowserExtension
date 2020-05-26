@@ -5,7 +5,6 @@
 import path from 'path';
 import del from 'del';
 import { BUILD_DIR } from './consts';
-import { version } from './parse-package';
 
 const BRANCH = process.env.BUILD_ENV || '';
 

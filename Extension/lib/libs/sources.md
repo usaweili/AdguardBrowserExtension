@@ -25,12 +25,6 @@
 * Raw file: https://raw.githubusercontent.com/ameshkov/text-encoding/ddd20a5064f622b6fd47cdc11834ca8f130cb100/lib/encoding.js
 * `encoding-indexes.js` is **not** a third-party library, but definitions of encodings used by `encoding.js`
 
-#### `Dropbox-sdk.js`
-* v4.0.12
-* Licence: MIT
-* Release: https://github.com/dropbox/dropbox-sdk-js/tree/v4.0.12
-* `Dropbox-sdk.js` build is being used
-
 #### `d3.js`
 * v3.5.17
 * Licence: BSD 3-Clause
@@ -73,12 +67,12 @@ These libs are developed by us from scratch.
 #### `filter-downloader.js`
 * v1.0.11
 * Library source: https://github.com/AdguardTeam/FiltersDownloader/tree/v1.0.11
-​
+
 #### `extended-css.js`
-* v1.2.1
+* v1.2.8
 * Licence: LGPL-3.0
-* Library source: https://github.com/AdguardTeam/ExtendedCss/releases/tag/v1.2.1
-​
+* Library source: https://github.com/AdguardTeam/ExtendedCss/releases/tag/v1.2.8
+
 #### `lib/content-script/assistant.js`
 * v4.3.32
 * Library source: https://github.com/AdguardTeam/AdguardAssistant/tree/v4.3.32

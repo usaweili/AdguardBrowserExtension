@@ -129,9 +129,9 @@ Run the following command:
 
 This will create a Build directory with unpacked extensions for all browsers:
 ```
-  Build/chrome-$currentVersion
-  Build/firefox-$currentVersion
-  Build/opera-$currentVersion
+  Build/dev/chrome
+  Build/dev/firefox
+  Build/dev/edge
 ```
 
 **Building the beta and release versions**
@@ -143,10 +143,10 @@ Before building the release version, you should manually download necessary reso
 ```
 
 ```
-  yarn beta
-  yarn release
+  CREDENTIALS_PASSWORD=<password> yarn beta
+  CREDENTIALS_PASSWORD=<password> yarn release
 ```
-You will need to put certificate.pem file to the Compiler directory. This build will create unpacked extensions and then pack them (crx for Chrome, xpi for Firefox).
+You will need to put certificate.pem and mozilla_credentials.json files to the `./private` directory. This build will create unpacked extensions and then pack them (crx for Chrome, xpi for Firefox).
 
 <a id="dev-linter"></a>
 ### Linter

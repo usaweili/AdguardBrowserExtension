@@ -24,19 +24,16 @@ adguard.categories = (function (adguard) {
     /**
      * @returns {Array.<*>} filters
      */
-    var getFilters = function () {
-        var result = adguard.subscriptions.getFilters().filter(function (f) {
-            return !f.removed;
-        });
+    const getFilters = function () {
+        const result = adguard.subscriptions.getFilters()
+            .filter((f) => !f.removed);
 
-        var tags = adguard.tags.getTags();
+        const tags = adguard.tags.getTags();
 
-        result.forEach(function (f) {
+        result.forEach((f) => {
             f.tagsDetails = [];
-            f.tags.forEach(function (tagId) {
-                var tagDetails = tags.find(function (tag) {
-                    return tag.tagId === tagId;
-                });
+            f.tags.forEach((tagId) => {
+                const tagDetails = tags.find((tag) => tag.tagId === tagId);
 
                 if (tagDetails) {
                     if (tagDetails.keyword.startsWith('reference:')) {
@@ -62,30 +59,30 @@ adguard.categories = (function (adguard) {
      *
      * @param groupId
      * @param filters
-     * @returns {Array.<SubscriptionFilter>}
+     * @returns {number[]}
      */
     const selectFiltersByGroupId = function (groupId, filters) {
-        return filters.filter(filter => filter.groupId === groupId);
+        return filters.filter((filter) => filter.groupId === groupId).map((f) => f.filterId);
     };
 
     /**
      * Constructs filters metadata for options.html page
      */
-    var getFiltersMetadata = function () {
-        var groupsMeta = adguard.subscriptions.getGroups();
-        var filters = getFilters();
+    const getFiltersMetadata = function () {
+        const groupsMeta = adguard.subscriptions.getGroups();
+        const filters = getFilters();
 
-        var categories = [];
+        const categories = [];
 
-        for (var i = 0; i < groupsMeta.length; i += 1) {
-            var category = groupsMeta[i];
+        for (let i = 0; i < groupsMeta.length; i += 1) {
+            const category = groupsMeta[i];
             category.filters = selectFiltersByGroupId(category.groupId, filters);
             categories.push(category);
         }
 
         return {
-            filters: filters,
-            categories: categories,
+            filters,
+            categories,
         };
     };
 
@@ -116,7 +113,7 @@ adguard.categories = (function (adguard) {
         for (let i = 0; i < metadata.categories.length; i += 1) {
             const category = metadata.categories[i];
             if (category.groupId === groupId) {
-                category.filters.forEach(filter => {
+                category.filters.forEach((filter) => {
                     if (adguard.tags.isRecommendedFilter(filter) && doesFilterMatchPlatform(filter)) {
                         // get ids intersection to enable recommended filters matching the lang tag
                         // only if filter has language
@@ -159,9 +156,8 @@ adguard.categories = (function (adguard) {
     };
 
     return {
-        getFiltersMetadata: getFiltersMetadata,
-        enableFiltersGroup: enableFiltersGroup,
-        disableFiltersGroup: disableFiltersGroup,
+        getFiltersMetadata,
+        enableFiltersGroup,
+        disableFiltersGroup,
     };
 })(adguard);
-

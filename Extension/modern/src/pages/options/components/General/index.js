@@ -2,11 +2,12 @@ import React, { useContext } from 'react';
 import { observer } from 'mobx-react';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
-import Setting from '../Settings/Setting';
+import Setting, { SETTINGS_TYPES } from '../Settings/Setting';
 import rootStore from '../../stores';
 import log from '../../../../services/log';
 import i18n from '../../../../services/i18n';
 
+// TODO move into helpers
 const hoursToMs = (hours) => {
     const MS_IN_HOUR = 1000 * 60 * 60;
     return hours * MS_IN_HOUR;
@@ -48,12 +49,12 @@ const getSettingsMap = (settings) => ({
         general: {
             id: 'general',
             title: i18n.translate('context_general_settings'),
-            sets: ['allowAcceptableAds', 'showPageStatistic', 'filtersAutodetect', 'filtersUpdatePeriod'],
-        },
-        browsingSecurity: {
-            id: 'browsingSecurity',
-            title: i18n.translate('context_safebrowsing'),
-            sets: ['safebrowsingEnabled', 'sendSafebrowsingStats'],
+            sets: [
+                'allowAcceptableAds',
+                'safebrowsingEnabled',
+                'filtersAutodetect',
+                'filtersUpdatePeriod',
+            ],
         },
     },
     sets: {
@@ -63,10 +64,11 @@ const getSettingsMap = (settings) => ({
             description: i18n.translate('options_learn_more'), // TODO add link here
             settings: ['allowAcceptableAds'],
         },
-        showPageStatistic: {
-            id: 'showPageStatistic',
-            title: i18n.translate('options_show_blocked_ads_count'),
-            settings: [settings.names.DISABLE_SHOW_PAGE_STATS],
+        safebrowsingEnabled: {
+            id: 'safebrowsingEnabled',
+            title: i18n.translate('options_safebrowsing_enabled'),
+            description: i18n.translate('options_learn_more'), // TODO add link here
+            settings: [settings.names.DISABLE_SAFEBROWSING],
         },
         filtersAutodetect: {
             id: 'filtersAutodetect',
@@ -78,48 +80,26 @@ const getSettingsMap = (settings) => ({
             title: i18n.translate('options_set_update_interval'),
             settings: [settings.names.FILTERS_UPDATE_PERIOD],
         },
-        safebrowsingEnabled: {
-            id: 'safebrowsingEnabled',
-            title: i18n.translate('options_safebrowsing_enabled'),
-            description: i18n.translate('options_learn_more'), // TODO add link here
-            settings: [settings.names.DISABLE_SAFEBROWSING],
-        },
-        sendSafebrowsingStats: {
-            id: 'sendSafebrowsingStats',
-            title: i18n.translate('options_safebrowsing_help'),
-            description: i18n.translate('options_safebrowsing_help_desc'),
-            settings: [settings.names.DISABLE_SEND_SAFEBROWSING_STATS],
-        },
     },
     settings: {
         // TODO add special handler
         allowAcceptableAds: {
             id: 'allowAcceptableAds',
-            type: 'checkbox',
-        },
-        [settings.names.DISABLE_SHOW_PAGE_STATS]: {
-            id: settings.names.DISABLE_SHOW_PAGE_STATS,
-            type: 'checkbox',
-            inverted: true,
+            type: SETTINGS_TYPES.CHECKBOX,
         },
         [settings.names.DISABLE_DETECT_FILTERS]: {
             id: settings.names.DISABLE_DETECT_FILTERS,
-            type: 'checkbox',
+            type: SETTINGS_TYPES.CHECKBOX,
             inverted: true,
         },
         [settings.names.FILTERS_UPDATE_PERIOD]: {
             id: settings.names.FILTERS_UPDATE_PERIOD,
-            type: 'select',
+            type: SETTINGS_TYPES.SELECT,
             options: filtersUpdatePeriodOptions,
         },
         [settings.names.DISABLE_SAFEBROWSING]: {
             id: settings.names.DISABLE_SAFEBROWSING,
-            type: 'checkbox',
-            inverted: true,
-        },
-        [settings.names.DISABLE_SEND_SAFEBROWSING_STATS]: {
-            id: settings.names.DISABLE_SEND_SAFEBROWSING_STATS,
-            type: 'checkbox',
+            type: SETTINGS_TYPES.CHECKBOX,
             inverted: true,
         },
     },
@@ -168,7 +148,7 @@ const General = observer(() => {
     });
 
     const renderSections = () => {
-        const sections = ['general', 'browsingSecurity'];
+        const sections = ['general'];
         return sections.map((sectionId) => {
             const section = settingsMap.sections[sectionId];
             return (
@@ -200,6 +180,7 @@ const General = observer(() => {
                 className="button button--m button--green content__btn"
                 onClick={handleExportSettings}
             >
+                {/* TODO translate */}
                 Export settings
             </button>
             <button
@@ -207,6 +188,7 @@ const General = observer(() => {
                 className="button button--m button--green-bd content__btn"
                 onClick={handleImportSettings}
             >
+                {/* TODO translate */}
                 Import settings
             </button>
         </>

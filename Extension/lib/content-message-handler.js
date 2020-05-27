@@ -92,6 +92,7 @@
         return {
             settings: adguard.settings.getAllSettings(),
             appVersion: adguard.app.getVersion(),
+            filtersMetadata: adguard.categories.getFiltersMetadata(),
         };
     }
 

@@ -4,7 +4,6 @@ import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
 import Setting, { SETTINGS_TYPES } from '../Settings/Setting';
 import rootStore from '../../stores';
-import log from '../../../../services/log';
 import i18n from '../../../../services/i18n';
 
 // TODO move into helpers
@@ -44,123 +43,18 @@ const filtersUpdatePeriodOptions = [
     },
 ];
 
-const getSettingsMap = (settings) => ({
-    sections: {
-        general: {
-            id: 'general',
-            title: i18n.translate('context_general_settings'),
-            sets: [
-                'allowAcceptableAds',
-                'safebrowsingEnabled',
-                'filtersAutodetect',
-                'filtersUpdatePeriod',
-            ],
-        },
-    },
-    sets: {
-        allowAcceptableAds: {
-            id: 'allowAcceptableAds',
-            title: i18n.translate('options_allow_acceptable_ads'),
-            description: i18n.translate('options_learn_more'), // TODO add link here
-            settings: ['allowAcceptableAds'],
-        },
-        safebrowsingEnabled: {
-            id: 'safebrowsingEnabled',
-            title: i18n.translate('options_safebrowsing_enabled'),
-            description: i18n.translate('options_learn_more'), // TODO add link here
-            settings: [settings.names.DISABLE_SAFEBROWSING],
-        },
-        filtersAutodetect: {
-            id: 'filtersAutodetect',
-            title: i18n.translate('options_enable_autodetect_filter'),
-            settings: [settings.names.DISABLE_DETECT_FILTERS],
-        },
-        filtersUpdatePeriod: {
-            id: 'filtersUpdatePeriod',
-            title: i18n.translate('options_set_update_interval'),
-            settings: [settings.names.FILTERS_UPDATE_PERIOD],
-        },
-    },
-    settings: {
-        // TODO add special handler
-        allowAcceptableAds: {
-            id: 'allowAcceptableAds',
-            type: SETTINGS_TYPES.CHECKBOX,
-        },
-        [settings.names.DISABLE_DETECT_FILTERS]: {
-            id: settings.names.DISABLE_DETECT_FILTERS,
-            type: SETTINGS_TYPES.CHECKBOX,
-            inverted: true,
-        },
-        [settings.names.FILTERS_UPDATE_PERIOD]: {
-            id: settings.names.FILTERS_UPDATE_PERIOD,
-            type: SETTINGS_TYPES.SELECT,
-            options: filtersUpdatePeriodOptions,
-        },
-        [settings.names.DISABLE_SAFEBROWSING]: {
-            id: settings.names.DISABLE_SAFEBROWSING,
-            type: SETTINGS_TYPES.CHECKBOX,
-            inverted: true,
-        },
-    },
-});
+const ALLOW_ACCEPTABLE_ADS = 'allowAcceptableAds';
 
 const General = observer(() => {
     const {
         settingsStore,
     } = useContext(rootStore);
 
-    const { settings } = settingsStore;
+    const { settings, allowAcceptableAds } = settingsStore;
 
     if (!settings) {
         return null;
     }
-
-    const settingsMap = getSettingsMap(settings);
-
-    const handleSettingChange = async ({ id, data }) => {
-        try {
-            await settingsStore.updateSetting(id, data);
-        } catch (e) {
-            log.error(e);
-        }
-    };
-
-    const renderSettings = (settingsIds) => {
-        const enrichedSettings = settingsIds
-            .map((settingId) => settingsMap.settings[settingId])
-            .map((settingMeta) => {
-                const value = settings.values[settingMeta.id];
-                return { ...settingMeta, value };
-            });
-        return enrichedSettings.map((setting) => (
-            <Setting key={setting.id} setting={setting} handler={handleSettingChange} />
-        ));
-    };
-
-    const renderSets = (setsIds) => setsIds.map((setId) => {
-        const set = settingsMap.sets[setId];
-        return (
-            <SettingsSet key={set.id} title={set.title} description={set.description}>
-                {renderSettings(set.settings)}
-            </SettingsSet>
-        );
-    });
-
-    const renderSections = () => {
-        const sections = ['general'];
-        return sections.map((sectionId) => {
-            const section = settingsMap.sections[sectionId];
-            return (
-                <SettingsSection
-                    key={section.id}
-                    title={section.title}
-                >
-                    {renderSets(section.sets)}
-                </SettingsSection>
-            );
-        });
-    };
 
     const handleImportSettings = async () => {
         // TODO
@@ -170,26 +64,107 @@ const General = observer(() => {
         // TODO
     };
 
+    const allowAcceptableAdsChangeHandler = async ({ data }) => {
+        await settingsStore.setAllowAcceptableAdsValue(data);
+    };
+
+    const settingChangeHandler = async ({ id, data }) => {
+        await settingsStore.updateSetting(id, data);
+    };
+
+    const {
+        DISABLE_DETECT_FILTERS,
+        FILTERS_UPDATE_PERIOD,
+        DISABLE_SAFEBROWSING,
+    } = settings.names;
+
+    // eslint-disable-next-line max-len
+    const ALLOW_ACCEPTABLE_ADS_LEARN_MORE_URL = 'https://adguard.com/forward.html?action=self_promotion&from=options_screen&app=browser_extension';
+
+    // eslint-disable-next-line max-len
+    const SAFEBROWSING_LEARN_MORE_URL = 'https://adguard.com/forward.html?action=protection_works&from=options_screen&app=browser_extension';
+
     return (
         <>
             <h2 className="title">Settings</h2>
-            {settings
-                && renderSections()}
+            <SettingsSection
+                title={i18n.translate('context_general_settings')}
+            >
+                <SettingsSet
+                    title={i18n.translate('options_allow_acceptable_ads')}
+                    description={(
+                        <a
+                            href={ALLOW_ACCEPTABLE_ADS_LEARN_MORE_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {i18n.translate('options_learn_more')}
+                        </a>
+                    )}
+                >
+                    <Setting
+                        id={ALLOW_ACCEPTABLE_ADS}
+                        type={SETTINGS_TYPES.CHECKBOX}
+                        value={allowAcceptableAds}
+                        handler={allowAcceptableAdsChangeHandler}
+                    />
+                </SettingsSet>
+                <SettingsSet
+                    title={i18n.translate('options_safebrowsing_enabled')}
+                    description={(
+                        <a
+                            href={SAFEBROWSING_LEARN_MORE_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {i18n.translate('options_learn_more')}
+                        </a>
+                    )}
+                >
+                    <Setting
+                        id={DISABLE_SAFEBROWSING}
+                        type={SETTINGS_TYPES.CHECKBOX}
+                        inverted
+                        value={settings.values[DISABLE_SAFEBROWSING]}
+                        handler={settingChangeHandler}
+                    />
+                </SettingsSet>
+                <SettingsSet
+                    title={i18n.translate('options_enable_autodetect_filter')}
+                >
+                    <Setting
+                        id={DISABLE_DETECT_FILTERS}
+                        type={SETTINGS_TYPES.CHECKBOX}
+                        inverted
+                        handler={settingChangeHandler}
+                        value={settings.values[DISABLE_DETECT_FILTERS]}
+                    />
+                </SettingsSet>
+                <SettingsSet
+                    title={i18n.translate('options_set_update_interval')}
+                >
+                    <Setting
+                        id={FILTERS_UPDATE_PERIOD}
+                        type={SETTINGS_TYPES.SELECT}
+                        options={filtersUpdatePeriodOptions}
+                        value={settings.values[FILTERS_UPDATE_PERIOD]}
+                        handler={settingChangeHandler}
+                    />
+                </SettingsSet>
+            </SettingsSection>
             <button
                 type="button"
                 className="button button--m button--green content__btn"
                 onClick={handleExportSettings}
             >
-                {/* TODO translate */}
-                Export settings
+                {i18n.translate('options_export_settings')}
             </button>
             <button
                 type="button"
                 className="button button--m button--green-bd content__btn"
                 onClick={handleImportSettings}
             >
-                {/* TODO translate */}
-                Import settings
+                {i18n.translate('options_import_settings')}
             </button>
         </>
     );

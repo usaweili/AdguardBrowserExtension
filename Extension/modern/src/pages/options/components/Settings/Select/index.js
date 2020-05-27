@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './select.pcss';
 
-const renderOptions = options => options.map((option) => {
+const renderOptions = (options) => options.map((option) => {
     const { value, title } = option;
     return <option key={value} value={value}>{title}</option>;
 });

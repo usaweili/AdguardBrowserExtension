@@ -85,6 +85,15 @@
         };
     }
 
+    const addAndEnableFilterHandler = (filterId) => new Promise((resolve, reject) => {
+        adguard.filters.addAndEnableFilters([filterId], (enabledFilters) => {
+            if (enabledFilters.length === 0) {
+                return reject(new Error('Filter was not enabled'));
+            }
+            resolve(enabledFilters);
+        });
+    });
+
     /**
      * Constructs objects that is used on options page
      */
@@ -93,6 +102,9 @@
             settings: adguard.settings.getAllSettings(),
             appVersion: adguard.app.getVersion(),
             filtersMetadata: adguard.categories.getFiltersMetadata(),
+            constants: {
+                AntiBannerFiltersId: adguard.utils.filters.ids,
+            },
         };
     }
 
@@ -124,7 +136,7 @@
      * @param callback
      * @returns {*}
      */
-    function handleMessage(message, sender, callback) {
+    async function handleMessage(message, sender, callback) {
         switch (message.type) {
             case 'unWhiteListFrame':
                 adguard.userrules.unWhiteListFrame(message.frameInfo);
@@ -138,8 +150,11 @@
                 break;
             case 'initializeFrameScript':
                 return processInitializeFrameScriptRequest();
-            case 'getOptionsData':
-                return processGetOptionsData();
+            case 'getOptionsData': {
+                const result = processGetOptionsData();
+                callback(result);
+                break;
+            }
             case 'changeUserSetting':
                 adguard.settings.setProperty(message.key, message.value);
                 break;
@@ -148,6 +163,16 @@
             case 'addAndEnableFilter':
                 adguard.filters.addAndEnableFilters([message.filterId]);
                 break;
+            case 'addAndEnableFilterModern': {
+                const enabledFilters = await addAndEnableFilterHandler(message.data.filterId);
+                callback(enabledFilters);
+                return true;
+            }
+            case 'disableAntiBannerFilterModern': {
+                const result = adguard.filters.uninstallFilters([message.data.filterId]);
+                callback(result);
+                return true;
+            }
             case 'disableAntiBannerFilter':
                 if (message.remove) {
                     adguard.filters.uninstallFilters([message.filterId]);

@@ -60,10 +60,6 @@ const General = observer(() => {
         // TODO
     };
 
-    const handleExportSettings = async () => {
-        // TODO
-    };
-
     const allowAcceptableAdsChangeHandler = async ({ data }) => {
         await settingsStore.setAllowAcceptableAdsValue(data);
     };
@@ -155,9 +151,10 @@ const General = observer(() => {
             <button
                 type="button"
                 className="button button--m button--green content__btn"
-                onClick={handleExportSettings}
             >
-                {i18n.translate('options_export_settings')}
+                <a href="/pages/export.html#exs" target="_blank">
+                    {i18n.translate('options_export_settings')}
+                </a>
             </button>
             <button
                 type="button"

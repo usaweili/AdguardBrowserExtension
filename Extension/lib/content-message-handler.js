@@ -136,7 +136,7 @@
      * @param callback
      * @returns {*}
      */
-    async function handleMessage(message, sender, callback) {
+    function handleMessage(message, sender, callback) {
         switch (message.type) {
             case 'unWhiteListFrame':
                 adguard.userrules.unWhiteListFrame(message.frameInfo);
@@ -164,8 +164,8 @@
                 adguard.filters.addAndEnableFilters([message.filterId]);
                 break;
             case 'addAndEnableFilterModern': {
-                const enabledFilters = await addAndEnableFilterHandler(message.data.filterId);
-                callback(enabledFilters);
+                // TODO rewrite with async/await
+                addAndEnableFilterHandler(message.data.filterId).then(callback);
                 return true;
             }
             case 'disableAntiBannerFilterModern': {

@@ -409,7 +409,7 @@
     /**
      * Imports settings set from json format
      * @param {string} json
-     * @param {function} cb
+     * @param {function} [cb]
      */
     const applySettingsBackupJson = function (json, cb) {
         function onFinished(success) {

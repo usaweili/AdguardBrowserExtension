@@ -164,7 +164,7 @@
                 adguard.filters.addAndEnableFilters([message.filterId]);
                 break;
             case 'addAndEnableFilterModern': {
-                // TODO rewrite with async/await
+                // TODO rewrite with async/await after webextension polyfill would be added
                 addAndEnableFilterHandler(message.data.filterId).then(callback);
                 return true;
             }
@@ -423,7 +423,7 @@
                 return true; // Async
             }
             case 'applySettingsJson':
-                adguard.sync.settingsProvider.applySettingsBackup(message.json);
+                adguard.sync.settingsProvider.applySettingsBackup(message.data.json);
                 break;
             case 'disableGetPremiumNotification':
                 adguard.settings.disableShowAdguardPromoInfo();

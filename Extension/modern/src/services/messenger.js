@@ -38,6 +38,12 @@ class Messenger {
         const type = 'disableAntiBannerFilterModern';
         return this.sendMessage(type, { filterId });
     }
+
+    async applySettingsJson(json) {
+        // TODO use common message types in the constants
+        const type = 'applySettingsJson';
+        return this.sendMessage(type, { json });
+    }
 }
 
 const messenger = new Messenger();

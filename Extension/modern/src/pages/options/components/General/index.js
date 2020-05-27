@@ -1,16 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { observer } from 'mobx-react';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
 import Setting, { SETTINGS_TYPES } from '../Settings/Setting';
 import rootStore from '../../stores';
 import i18n from '../../../../services/i18n';
-
-// TODO move into helpers
-const hoursToMs = (hours) => {
-    const MS_IN_HOUR = 1000 * 60 * 60;
-    return hours * MS_IN_HOUR;
-};
+import messenger from '../../../../services/messenger';
+import { hoursToMs, uploadFile } from '../../../../helpers';
 
 const filtersUpdatePeriodOptions = [
     {
@@ -56,8 +52,29 @@ const General = observer(() => {
         return null;
     }
 
-    const handleImportSettings = async () => {
-        // TODO
+    const inputEl = useRef(null);
+
+    const handleExportSettings = () => {
+        window.open('/pages/export.html#exs', '_blank');
+    };
+
+    const inputChangeHandler = async (e) => {
+        const file = e.currentTarget.files[0];
+
+        try {
+            const content = await uploadFile(file);
+            await messenger.applySettingsJson(content);
+        } catch (e) {
+            // TODO add errors toast info visible on options page
+            console.log(e.message);
+        }
+
+        e.value = 0;
+    };
+
+    const handleImportSettings = async (e) => {
+        e.preventDefault();
+        inputEl.current.click();
     };
 
     const allowAcceptableAdsChangeHandler = async ({ data }) => {
@@ -151,18 +168,26 @@ const General = observer(() => {
             <button
                 type="button"
                 className="button button--m button--green content__btn"
+                onClick={handleExportSettings}
             >
-                <a href="/pages/export.html#exs" target="_blank">
-                    {i18n.translate('options_export_settings')}
-                </a>
+                {i18n.translate('options_export_settings')}
             </button>
-            <button
-                type="button"
-                className="button button--m button--green-bd content__btn"
-                onClick={handleImportSettings}
-            >
-                {i18n.translate('options_import_settings')}
-            </button>
+            <div>
+                <input
+                    type="file"
+                    id="inputEl"
+                    ref={inputEl}
+                    onChange={inputChangeHandler}
+                    style={{ display: 'none' }}
+                />
+                <button
+                    type="button"
+                    className="button button--m button--green-bd content__btn"
+                    onClick={handleImportSettings}
+                >
+                    {i18n.translate('options_import_settings')}
+                </button>
+            </div>
         </>
     );
 });

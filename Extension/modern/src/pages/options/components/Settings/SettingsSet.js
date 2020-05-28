@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function SettingsSet(props) {
+const SettingsSet = (props) => {
     const { title, description, children } = props;
     return (
         <div className="setting">
@@ -10,16 +10,16 @@ function SettingsSet(props) {
                     {title}
                 </div>
                 { description
-                    ? (
+                        && (
                         <div className="setting__desc">
                             {description}
                         </div>
-                    ) : ''}
+                        )}
                 {children}
             </div>
         </div>
     );
-}
+};
 
 SettingsSet.defaultProps = {
     description: '',
@@ -28,8 +28,8 @@ SettingsSet.defaultProps = {
 
 SettingsSet.propTypes = {
     title: PropTypes.string,
-    description: PropTypes.string,
-    children: PropTypes.arrayOf(PropTypes.node).isRequired,
+    description: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]).isRequired,
 };
 
 export default SettingsSet;

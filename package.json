@@ -4,6 +4,7 @@
   "description": "AdGuard Extension",
   "scripts": {
     "webpack": "webpack --config tasks/webpack-config/webpack.common.js",
+    "gulp:watch": "BUILD_ENV=dev gulp watch --require @babel/register --gulpfile tasks",
     "gulp:dev": "gulp buildDev --require @babel/register --gulpfile tasks",
     "gulp:beta": "gulp buildBeta --require @babel/register --gulpfile tasks",
     "gulp:release": "gulp buildRelease --require @babel/register --gulpfile tasks",
@@ -82,6 +83,7 @@
   "dependencies": {
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-modal": "^3.11.2",

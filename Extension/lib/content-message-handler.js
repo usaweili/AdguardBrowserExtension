@@ -85,6 +85,15 @@
         };
     }
 
+    const addAndEnableFilterHandler = (filterId) => new Promise((resolve, reject) => {
+        adguard.filters.addAndEnableFilters([filterId], (enabledFilters) => {
+            if (enabledFilters.length === 0) {
+                return reject(new Error('Filter was not enabled'));
+            }
+            resolve(enabledFilters);
+        });
+    });
+
     /**
      * Constructs objects that is used on options page
      */
@@ -92,6 +101,10 @@
         return {
             settings: adguard.settings.getAllSettings(),
             appVersion: adguard.app.getVersion(),
+            filtersMetadata: adguard.categories.getFiltersMetadata(),
+            constants: {
+                AntiBannerFiltersId: adguard.utils.filters.ids,
+            },
         };
     }
 
@@ -137,8 +150,11 @@
                 break;
             case 'initializeFrameScript':
                 return processInitializeFrameScriptRequest();
-            case 'getOptionsData':
-                return processGetOptionsData();
+            case 'getOptionsData': {
+                const result = processGetOptionsData();
+                callback(result);
+                break;
+            }
             case 'changeUserSetting':
                 adguard.settings.setProperty(message.key, message.value);
                 break;
@@ -147,6 +163,16 @@
             case 'addAndEnableFilter':
                 adguard.filters.addAndEnableFilters([message.filterId]);
                 break;
+            case 'addAndEnableFilterModern': {
+                // TODO rewrite with async/await after webextension polyfill would be added
+                addAndEnableFilterHandler(message.data.filterId).then(callback);
+                return true;
+            }
+            case 'disableAntiBannerFilterModern': {
+                const result = adguard.filters.uninstallFilters([message.data.filterId]);
+                callback(result);
+                return true;
+            }
             case 'disableAntiBannerFilter':
                 if (message.remove) {
                     adguard.filters.uninstallFilters([message.filterId]);
@@ -397,7 +423,7 @@
                 return true; // Async
             }
             case 'applySettingsJson':
-                adguard.sync.settingsProvider.applySettingsBackup(message.json);
+                adguard.sync.settingsProvider.applySettingsBackup(message.data.json);
                 break;
             case 'disableGetPremiumNotification':
                 adguard.settings.disableShowAdguardPromoInfo();

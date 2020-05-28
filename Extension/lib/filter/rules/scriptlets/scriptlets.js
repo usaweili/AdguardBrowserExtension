@@ -765,12 +765,11 @@
      *
      * **Syntax**
      * ```
-     * example.org#%#//scriptlet('abort-on-property-read', property[, stack])
+     * example.org#%#//scriptlet('abort-on-property-read', <property>)
      * ```
      *
      * **Parameters**
-     * - `property` (required) path to a property (joined with `.` if needed). The property must be attached to `window`
-     * - `stack` (optional) string or regular expression that must match the current function call stack trace
+     * - `property` (required) path to a property (joined with `.` if needed). The property must be attached to `window`.
      *
      * **Examples**
      * ```
@@ -848,12 +847,11 @@
      *
      * **Syntax**
      * ```
-     * example.org#%#//scriptlet('abort-on-property-write', property[, stack])
+     * example.org#%#//scriptlet('abort-on-property-write', <property>)
      * ```
      *
      * **Parameters**
-     * - `property` (required) path to a property (joined with `.` if needed). The property must be attached to `window`
-     * - `stack` (optional) string or regular expression that must match the current function call stack trace
+     * - `property` (required) path to a property (joined with `.` if needed). The property must be attached to `window`.
      *
      * **Examples**
      * ```

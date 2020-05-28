@@ -3,37 +3,55 @@ import Checkbox from './Checkbox';
 import Select from './Select';
 import TextInput from './TextInput';
 
+export const SETTINGS_TYPES = {
+    CHECKBOX: 'checkbox',
+    SELECT: 'select',
+    INPUT: 'input',
+};
+
 export default function Setting(props) {
-    const { setting, handler } = props;
-    switch (setting.type) {
-        case 'checkbox': {
+    const { type } = props;
+    switch (type) {
+        case SETTINGS_TYPES.CHECKBOX: {
+            const {
+                id, handler, inverted, value,
+            } = props;
             return (
                 <Checkbox
-                    key={setting.id}
-                    {...setting}
+                    id={id}
                     handler={handler}
+                    inverted={inverted}
+                    value={value}
                 />
             );
         }
-        case 'select': {
+        case SETTINGS_TYPES.SELECT: {
+            const {
+                id, handler, options, value,
+            } = props;
             return (
                 <Select
-                    key={setting.id}
-                    {...setting}
+                    id={id}
                     handler={handler}
+                    options={options}
+                    value={value}
                 />
             );
         }
-        case 'input': {
+        case SETTINGS_TYPES.INPUT: {
+            const { id, value, handler } = props;
             return (
                 <TextInput
-                    key={setting.id}
-                    {...setting}
+                    id={id}
+                    value={value}
                     handler={handler}
                 />
             );
         }
         default:
-            throw new Error(`There is no right component for a type: "${setting.type}". Available types: ["checkbox", "select", "input"]`);
+            throw new Error(`
+                There is no right component for a type: "${type}".
+                Available types: ${Object.values(SETTINGS_TYPES).join(', ')}
+            `);
     }
 }

@@ -9963,9 +9963,9 @@ schema-utils@^2.6.5:
     ajv "^6.12.0"
     ajv-keywords "^3.4.1"
 
-"scriptlets@https://github.com/AdguardTeam/Scriptlets.git#v1.1.15":
-  version "1.1.13"
-  resolved "https://github.com/AdguardTeam/Scriptlets.git#a2d5e6485624cc930f3df6bf346e0f32f1a8a4ff"
+"scriptlets@https://github.com/AdguardTeam/Scriptlets.git#v1.2.1":
+  version "1.2.1"
+  resolved "https://github.com/AdguardTeam/Scriptlets.git#732bc431f4c54da4e29e42fdaf9b683125dcb103"
   dependencies:
     "@babel/runtime" "^7.7.2"
     axios "^0.19.0"

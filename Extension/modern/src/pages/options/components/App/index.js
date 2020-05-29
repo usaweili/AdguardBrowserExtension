@@ -17,6 +17,7 @@ import About from '../About';
 import Footer from '../Footer/Footer';
 
 import rootStore from '../../stores';
+import { Notifications } from '../Notifications';
 
 const App = observer(() => {
     const { settingsStore } = useContext(rootStore);
@@ -49,6 +50,7 @@ const App = observer(() => {
                 </div>
             </div>
             <Footer />
+            <Notifications />
         </HashRouter>
     );
 });

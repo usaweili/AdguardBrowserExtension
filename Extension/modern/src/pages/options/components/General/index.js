@@ -44,6 +44,7 @@ const ALLOW_ACCEPTABLE_ADS = 'allowAcceptableAds';
 const General = observer(() => {
     const {
         settingsStore,
+        uiStore,
     } = useContext(rootStore);
 
     const { settings, allowAcceptableAds } = settingsStore;
@@ -59,17 +60,17 @@ const General = observer(() => {
     };
 
     const inputChangeHandler = async (e) => {
-        const file = e.currentTarget.files[0];
+        e.persist();
+        const file = e.target.files[0];
 
         try {
             const content = await uploadFile(file);
             await messenger.applySettingsJson(content);
         } catch (e) {
-            // TODO add errors toast info visible on options page
-            console.log(e.message);
+            uiStore.addNotification({ description: e.message });
         }
 
-        e.value = 0;
+        e.target.value = '';
     };
 
     const handleImportSettings = async (e) => {

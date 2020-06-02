@@ -1,8 +1,12 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
+import { observer } from 'mobx-react';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
 import Setting from '../Settings/Setting';
-import messenger from '../../../../services/messenger';
+import rootStore from "../../stores";
+import log from "../../../../services/log.js";
+import i18n from "../../../../services/i18n";
+
 
 const STEALTH_META = {
     sections: {
@@ -12,12 +16,12 @@ const STEALTH_META = {
         },
         cookiesSection: {
             id: 'cookiesSection',
-            title: 'Cookies',
+            title: i18n.translate('options_cookies_title'),
             sets: ['thirdPartyCookies', 'firstPartyCookies'],
         },
         miscellaneousSection: {
             id: 'miscellaneousSection',
-            title: 'Miscellaneous',
+            title: i18n.translate('context_miscellaneous_settings'),
             sets: [
                 'hideReferrer',
                 'hideSearchQueries',
@@ -32,154 +36,166 @@ const STEALTH_META = {
         stealthMode: {
             id: 'stealthMode',
             title: 'Stealth Mode',
-            description: 'Protect your identity and sensitive personal infor…rs by blocking the most popular tracking methods.',
+            description: i18n.translate('options_privacy_desc'),
             settings: ['stealthMode'],
         },
         thirdPartyCookies: {
             id: 'thirdPartyCookies',
-            title: 'Self-destructing third-party cookies',
-            description: 'Limit the lifetime of third-party cookies (minutes)',
+            title: i18n.translate('options_third_party_title'),
+            description: i18n.translate('options_third_party_desc'),
             settings: ['thirdPartyCookies', 'thirdPartyTime'],
         },
         firstPartyCookies: {
             id: 'firstPartyCookies',
-            title: 'Self-destructing first-party cookies (not recommended)',
-            description: 'Limit the lifetime of first-party cookies (minutes)',
+            title: i18n.translate('options_first_party_title'),
+            description: i18n.translate('options_first_party_desc'),
             settings: ['firstPartyCookies', 'firstPartyTime'],
         },
         hideReferrer: {
             id: 'hideReferrer',
-            title: 'Hide Referrer from third-parties',
-            description: 'Prevent third-parties from knowing what website you are visiting',
+            title: i18n.translate('options_hide_referrer_title'),
+            description: i18n.translate('options_hide_referrer_desc'),
             settings: ['hideReferrer'],
         },
         hideSearchQueries: {
             id: 'hideSearchQueries',
-            title: 'Hide your search queries',
-            description: 'Hide the queries for websites visited from a search engine',
+            title: i18n.translate('options_hide_search_queries_title'),
+            description: i18n.translate('options_hide_search_queries_desc'),
             settings: ['hideSearchQueries'],
         },
         sendNotTrack: {
             id: 'sendNotTrack',
-            title: 'Send Do-Not-Track header',
-            description: 'Prevent websites from tracking you',
+            title: i18n.translate('options_send_not_track_title'),
+            description: i18n.translate('options_send_not_track_desc'),
             settings: ['sendNotTrack'],
         },
         removeClientData: {
             id: 'removeClientData',
-            title: 'Remove X-Client-Data header',
-            description: 'Block Google Chrome from sending its version and modifications information to Google domains',
+            title: i18n.translate('options_remove_client_data_title'),
+            description: i18n.translate('options_remove_client_data_desc'),
             settings: ['removeClientData'],
         },
         blockWebrtc: {
             id: 'blockWebrtc',
-            title: 'Block WebRTC',
-            description: 'Prevent a possible disclosure of your real IP address even with proxy or VPN through WebRTC',
+            title: i18n.translate('options_disable_webrtc_title'),
+            description: i18n.translate('options_disable_webrtc_description'),
             settings: ['blockWebrtc'],
         },
         stripTrackingParams: {
             id: 'stripTrackingParams',
-            title: 'Remove tracking parameters',
-            description: 'Comma-separated list of tracking parameters which AdGuard will remove from pages addresses.',
+            title: i18n.translate('options_strip_tracking_params_title'),
+            description: i18n.translate('options_strip_tracking_params_desc'),
             settings: ['stripTrackingParams'],
         },
     },
     settings: {
-        stealthMode: { id: 'stealthMode', type: 'checkbox' },
-        thirdPartyCookies: { id: 'thirdPartyCookies', type: 'checkbox' },
-        thirdPartyTime: { id: 'thirdPartyTime', type: 'input' },
-        firstPartyCookies: { id: 'firstPartyCookies', type: 'checkbox' },
-        firstPartyTime: { id: 'firstPartyTime', type: 'input' },
-        hideReferrer: { id: 'hideReferrer', type: 'checkbox' },
-        hideSearchQueries: { id: 'hideSearchQueries', type: 'checkbox' },
-        sendNotTrack: { id: 'sendNotTrack', type: 'checkbox' },
-        removeClientData: { id: 'removeClientData', type: 'checkbox' },
-        blockWebrtc: { id: 'blockWebrtc', type: 'checkbox' },
-        stripTrackingParams: { id: 'stripTrackingParams', type: 'checkbox' },
+        stealthMode: { id: 'stealth_disable_stealth_mode', type: 'checkbox', inverted: true },
+        thirdPartyCookies: { id: 'stealth-block-third-party-cookies', type: 'checkbox', inverted: false },
+        thirdPartyTime: { id: 'stealth-block-third-party-cookies-time', type: 'input' },
+        firstPartyCookies: { id: 'stealth-block-first-party-cookies', type: 'checkbox', inverted: false },
+        firstPartyTime: { id: 'stealth-block-first-party-cookies-time', type: 'input' },
+        hideReferrer: { id: 'stealth-hide-referrer', type: 'checkbox', inverted: false },
+        hideSearchQueries: { id: 'stealth-hide-search-queries', type: 'checkbox', inverted: false },
+        sendNotTrack: { id: 'stealth-send-do-not-track', type: 'checkbox', inverted: false },
+        removeClientData: { id: 'stealth-remove-x-client', type: 'checkbox', inverted: false },
+        blockWebrtc: { id: 'stealth-block-webrtc', type: 'checkbox', inverted: false },
+        stripTrackingParams: { id: 'strip-tracking-parameters', type: 'checkbox', inverted: false },
+        trackingParams: { id: 'tracking-parameters', type: 'input' },
     },
 };
 
-class Stealth extends Component {
-    state = {};
+const Stealth = observer(() => {
+    const { settingsStore } = useContext(rootStore);
+    const { settings } = settingsStore;
 
-    async componentDidMount() {
-        let settings;
-        const requiredSettingsIds = Object.keys(STEALTH_META.settings);
-
-        try {
-            settings = await messenger.getSettingsByIds(requiredSettingsIds);
-        } catch (e) {
-            console.log(e);
-        }
-        this.setState({ settings });
+    if (!settings) {
+        return null;
     }
 
     // TODO [maximtop] throttle input
-    handleSettingChange = async ({ id, data }) => {
-        try {
-            await messenger.updateSetting(id, data);
-            console.log(`Settings ${id} was changed to ${data}`);
-        } catch (e) {
-            console.log(e);
-            return;
-        }
-        this.setState((state) => {
-            const { settings } = state;
-            const setting = settings[id];
-            const updatedSetting = { ...setting, value: data };
-            return {
-                ...state,
-                settings: { ...settings, [id]: updatedSetting },
-            };
-        });
+    const settingChangeHandler = async ({ id, data }) => {
+        log.info(`Setting ${id} set to ${data}`);
+        await settingsStore.updateSetting(id, data);
     };
 
-    renderSettings = (settingsIds) => {
-        const settingsData = this.state.settings;
+    const renderSettings = (settingsIds) => {
         const settingsMeta = settingsIds.map(settingId => STEALTH_META.settings[settingId]);
         const enrichedSettings = settingsMeta.map((settingMeta) => {
-            const settingData = settingsData[settingMeta.id];
-            return { ...settingMeta, ...settingData };
+            const settingData = settings.values[settingMeta.id];
+            return {
+                ...settingMeta,
+                value: settingData
+            };
         });
         return enrichedSettings.map(setting => (
-            <Setting key={setting.id} setting={setting} handler={this.handleSettingChange} />
+            <Setting
+                key={setting.id}
+                id={setting.id}
+                type={setting.type}
+                value={setting.value}
+                inverted={setting.inverted}
+                handler={settingChangeHandler}
+            />
         ));
     };
 
-    renderSets = (setsIds) => {
+    const renderSets = (setsIds) => {
         const sets = setsIds.map(setId => STEALTH_META.sets[setId]);
-        return sets.map(set => (
-            <SettingsSet key={set.id} {...set}>
-                {this.renderSettings(set.settings)}
-            </SettingsSet>
-        ));
+        return sets.map(set => {
+            const inverted = STEALTH_META.settings[set.id].inverted;
+            const disabled = !settings.values[STEALTH_META.settings[set.id].id];
+            return (
+                <SettingsSet
+                    key={set.id}
+                    {...set}
+                    disabled={inverted ? !disabled : disabled}
+                >
+                    {renderSettings(set.settings)}
+                </SettingsSet>
+            )
+        });
     };
 
-    renderSections = () => {
-        const sectionsOrder = ['stealthModeSection', 'cookiesSection', 'miscellaneousSection'];
-        return sectionsOrder.map((sectionId) => {
+    const renderSections = () => {
+        const stealthModeSettings = STEALTH_META.sections.stealthModeSection;
+        const stealthModeSection = (
+            <SettingsSection
+                key={stealthModeSettings.id}
+                title={stealthModeSettings.title}
+            >
+                {renderSets(stealthModeSettings.sets)}
+            </SettingsSection>
+        );
+
+        const isStealthModeDisabled = settings.values[STEALTH_META.settings.stealthMode.id];
+        const sectionsOrder = ['cookiesSection', 'miscellaneousSection'];
+        const sections = sectionsOrder.map((sectionId) => {
             const section = STEALTH_META.sections[sectionId];
             return (
                 <SettingsSection
                     key={section.id}
                     title={section.title}
+                    disabled={isStealthModeDisabled}
                 >
-                    {this.renderSets(section.sets)}
+                    {renderSets(section.sets)}
                 </SettingsSection>
             );
         });
+        return (
+            <div>
+                {stealthModeSection}
+                {sections}
+            </div>
+        );
     };
 
-    render() {
-        const { settings } = this.state;
-        return (
-            <Fragment>
-                <h2 className="title">Stealth Mode</h2>
-                {settings
-                && this.renderSections()}
-            </Fragment>
-        );
-    }
-}
+    return (
+        <Fragment>
+            <h2 className="title">Stealth Mode</h2>
+            {settings
+            && renderSections()}
+        </Fragment>
+    );
+});
 
 export default Stealth;

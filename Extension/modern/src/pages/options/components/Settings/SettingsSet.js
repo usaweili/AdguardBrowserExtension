@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 const SettingsSet = (props) => {
-    const { title, description, children, disabled } = props;
+    const {
+        title, description, children, disabled,
+    } = props;
     const settingClassName = classNames({
-        'setting': true,
+        setting: true,
         'setting--disabled': disabled,
     });
     return (
@@ -29,12 +31,16 @@ const SettingsSet = (props) => {
 SettingsSet.defaultProps = {
     description: '',
     title: '',
+    disabled: false,
 };
 
 SettingsSet.propTypes = {
     title: PropTypes.string,
     description: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]).isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.element,
+        PropTypes.arrayOf(PropTypes.element),
+    ]).isRequired,
     disabled: PropTypes.bool,
 };
 

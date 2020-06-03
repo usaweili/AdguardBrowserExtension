@@ -4,6 +4,7 @@ import './empty-custom.pcss';
 
 // TODO rewrite to functional component
 class EmptyCustom extends Component {
+    // eslint-disable-next-line react/state-in-constructor
     state = {
         modalIsOpen: false,
     };

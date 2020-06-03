@@ -1,8 +1,9 @@
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
 import Setting from '../Settings/Setting';
 import messenger from '../../../../services/messenger';
+import log from '../../../../services/log';
 
 const MISCELLANEOUS_META = {
     sets: {
@@ -69,15 +70,13 @@ const MISCELLANEOUS_META = {
 };
 
 class Miscellaneous extends Component {
-    state = {};
-
     async componentDidMount() {
         let settings;
         const settingsIds = Object.keys(MISCELLANEOUS_META.settings);
         try {
             settings = await messenger.getSettingsByIds(settingsIds);
         } catch (e) {
-            console.log(e);
+            log.error(e);
         }
         this.setState({ settings });
     }
@@ -85,9 +84,9 @@ class Miscellaneous extends Component {
     handleSettingChange = async ({ id, data }) => {
         try {
             await messenger.updateSetting(id, data);
-            console.log(`Settings ${id} was changed to ${data}`);
+            log.info(`Settings ${id} was changed to ${data}`);
         } catch (e) {
-            console.log(e);
+            log.error(e);
             return;
         }
         this.setState((state) => {
@@ -110,14 +109,14 @@ class Miscellaneous extends Component {
     renderSettings = (settingsIds) => {
         const settingsData = this.state.settings;
         const settingsMeta = settingsIds
-            .map(settingId => MISCELLANEOUS_META.settings[settingId]);
+            .map((settingId) => MISCELLANEOUS_META.settings[settingId]);
         const enrichedSettings = settingsMeta
-            .map(settingsMetadata => ({
+            .map((settingsMetadata) => ({
                 ...settingsMetadata,
                 ...settingsData[settingsMetadata.id],
             }));
 
-        return enrichedSettings.map(setting => (
+        return enrichedSettings.map((setting) => (
             <Setting key={setting.id} setting={setting} handler={this.handleSettingChange} />
         ));
     };
@@ -131,8 +130,9 @@ class Miscellaneous extends Component {
             'showInfoAboutAdguardFullVersion',
             'showAppUpdatedNotification',
         ];
-        const sets = setsOrder.map(setId => MISCELLANEOUS_META.sets[setId]);
-        return sets.map(set => (
+        const sets = setsOrder.map((setId) => MISCELLANEOUS_META.sets[setId]);
+        return sets.map((set) => (
+            // eslint-disable-next-line react/jsx-props-no-spreading
             <SettingsSet key={set.id} {...set}>{this.renderSettings(set.settings)}</SettingsSet>
         ));
     };
@@ -153,7 +153,7 @@ class Miscellaneous extends Component {
     render() {
         const { settings } = this.state;
         return (
-            <Fragment>
+            <>
                 <h2 className="title">Miscellaneous</h2>
                 {settings
                 && (
@@ -182,7 +182,7 @@ class Miscellaneous extends Component {
                 >
                     Changelog
                 </button>
-            </Fragment>
+            </>
         );
     }
 }

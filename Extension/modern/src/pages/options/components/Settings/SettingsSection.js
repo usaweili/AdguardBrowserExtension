@@ -5,7 +5,7 @@ import classNames from 'classnames';
 function SettingsSection(props) {
     const { title, children, disabled } = props;
     const settingGroupClassName = classNames({
-        'settings__group': true,
+        settings__group: true,
         'settings__group--disabled': disabled,
     });
     return (
@@ -29,8 +29,9 @@ SettingsSection.propTypes = {
     title: PropTypes.string,
     children: PropTypes.oneOfType([
         PropTypes.object,
-        PropTypes.arrayOf(PropTypes.node)
+        PropTypes.arrayOf(PropTypes.node),
     ]).isRequired,
+    disabled: PropTypes.bool,
 };
 
 export default SettingsSection;

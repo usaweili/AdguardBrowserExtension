@@ -1,11 +1,11 @@
-import React, { Fragment, useContext } from 'react';
+import React, { useContext } from 'react';
 import { observer } from 'mobx-react';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
-import Setting, {SETTINGS_TYPES} from '../Settings/Setting';
-import rootStore from "../../stores";
-import log from "../../../../services/log.js";
-import i18n from "../../../../services/i18n";
+import Setting, { SETTINGS_TYPES } from '../Settings/Setting';
+import rootStore from '../../stores';
+import log from '../../../../services/log';
+import i18n from '../../../../services/i18n';
 
 const Stealth = observer(() => {
     const { settingsStore } = useContext(rootStore);
@@ -15,7 +15,6 @@ const Stealth = observer(() => {
         return null;
     }
 
-    // TODO [maximtop] throttle input
     const settingChangeHandler = async ({ id, data }) => {
         log.info(`Setting ${id} set to ${data}`);
         await settingsStore.updateSetting(id, data);

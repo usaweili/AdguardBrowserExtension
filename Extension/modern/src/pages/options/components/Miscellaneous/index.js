@@ -154,21 +154,21 @@ const Miscellaneous = observer(() => {
                 className="button button--m button--green content__btn"
                 onClick={handleFilteringLogClick}
             >
-                Filtering log
+                {i18n.translate('options_open_log')}
             </button>
             <button
                 type="button"
                 className="button button--m button--green-bd content__btn"
                 onClick={handleResetStatisticsClick}
             >
-                Reset statistics
+                {i18n.translate('options_reset_stats')}
             </button>
             <button
                 type="button"
                 className="button button--m button--green-bd content__btn"
                 onClick={handleOpenChangelog}
             >
-                Changelog
+                {i18n.translate('options_open_changelog')}
             </button>
         </>
     );

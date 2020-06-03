@@ -6,41 +6,41 @@ import './empty-custom.pcss';
 class EmptyCustom extends Component {
     // eslint-disable-next-line react/state-in-constructor
     state = {
-        modalIsOpen: false,
+      modalIsOpen: false,
     };
 
     openModalHandler = () => {
-        this.setState({ modalIsOpen: true });
+      this.setState({ modalIsOpen: true });
     };
 
     closeModalHandler = () => {
-        this.setState({ modalIsOpen: false });
+      this.setState({ modalIsOpen: false });
     };
 
     render() {
-        const { modalIsOpen } = this.state;
-        const text = "Sorry, but you don't have any custom filters yet";
-        return (
-            <div className="empty-custom">
-                <div className="empty-custom__ico" />
-                <div className="empty-custom__desc">
-                    {text}
-                </div>
-                <button
-                    type="button"
-                    onClick={this.openModalHandler}
-                    className="button button--m button--green"
-                >
-                    Add custom filter
-                </button>
-                {modalIsOpen && (
-                <AddCustomModal
-                    closeModalHandler={this.closeModalHandler}
-                    modalIsOpen={modalIsOpen}
-                />
-                )}
-            </div>
-        );
+      const { modalIsOpen } = this.state;
+      const text = "Sorry, but you don't have any custom filters yet";
+      return (
+        <div className="empty-custom">
+          <div className="empty-custom__ico" />
+          <div className="empty-custom__desc">
+            {text}
+          </div>
+          <button
+            type="button"
+            onClick={this.openModalHandler}
+            className="button button--m button--green"
+          >
+            Add custom filter
+          </button>
+          {modalIsOpen && (
+            <AddCustomModal
+              closeModalHandler={this.closeModalHandler}
+              modalIsOpen={modalIsOpen}
+            />
+          )}
+        </div>
+      );
     }
 }
 

@@ -8,8 +8,8 @@ function Textarea(props) {
     } = props;
 
     const changeHandler = (e) => {
-        const { target: { name: id, value: data } } = e;
-        handler({ id, data });
+        const {target: {name: id, value: data}} = e;
+        handler({id, data});
     };
 
     return (
@@ -18,9 +18,8 @@ function Textarea(props) {
             onChange={changeHandler}
             id={id}
             className="textarea"
-        >
-            {value}
-        </textarea>
+            defaultValue={value}
+        />
     );
 }
 

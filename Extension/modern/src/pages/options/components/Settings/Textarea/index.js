@@ -16,11 +16,10 @@ function Textarea(props) {
         <textarea
             name={id}
             onChange={changeHandler}
-            id={id}
+            aria-label={id}
             className="textarea"
-        >
-            {value}
-        </textarea>
+            defaultValue={value}
+        />
     );
 }
 

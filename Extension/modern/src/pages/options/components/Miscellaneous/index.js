@@ -2,15 +2,15 @@ import React, { useContext } from 'react';
 import { observer } from 'mobx-react';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
-import Setting, {SETTINGS_TYPES} from '../Settings/Setting';
+import Setting, { SETTINGS_TYPES } from '../Settings/Setting';
 import messenger from '../../../../services/messenger';
-import rootStore from "../../stores";
-import log from '../../../../services/log.js';
+import rootStore from '../../stores';
+import log from '../../../../services/log';
 import i18n from '../../../../services/i18n';
 
 const Miscellaneous = observer(() => {
-    const {settingsStore} = useContext(rootStore);
-    const {settings} = settingsStore;
+    const { settingsStore } = useContext(rootStore);
+    const { settings } = settingsStore;
 
     if (!settings) {
         return null;

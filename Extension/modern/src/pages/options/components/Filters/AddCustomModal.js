@@ -1,7 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import messenger from '../../../../services/messenger';
+import log from '../../../../services/log';
+import i18n from '../../../../services/i18n';
 
 Modal.setAppElement('#root');
 
@@ -56,6 +58,7 @@ const defaultState = {
 
 // TODO rewrite to functional component
 class AddCustomModal extends Component {
+    // eslint-disable-next-line react/state-in-constructor
     state = {
         ...defaultState,
     };
@@ -72,7 +75,7 @@ class AddCustomModal extends Component {
         try {
             result = await messenger.checkCustomUrl(customUrlToAdd);
         } catch (e) {
-            console.log(e);
+            log.error(e);
             this.setState({ stepToRender: 'error' });
         }
         this.setState({ filterToAdd: result, stepToRender: 'approve' });
@@ -83,7 +86,7 @@ class AddCustomModal extends Component {
         const { customUrlToAdd } = this.state;
         // TODO [maximtop] add enter key press handler
         return (
-            <Fragment>
+            <>
                 <ModalContentWrapper closeModalHandler={closeModalHandler} title="New filter subscription">
                     <div className="modal__content">
                         <input
@@ -108,7 +111,7 @@ class AddCustomModal extends Component {
                         Next
                     </button>
                 </ModalContentWrapper>
-            </Fragment>
+            </>
         );
     };
 
@@ -122,7 +125,7 @@ class AddCustomModal extends Component {
             try {
                 await messenger.addCustomFilter(filterToAdd);
             } catch (e) {
-                console.log(e);
+                log.error(e);
             }
             closeModalHandler();
             return {
@@ -141,7 +144,7 @@ class AddCustomModal extends Component {
         // TODO [maximtop] next line is used quite often, needs DRY refactoring
         const { closeModalHandler } = this.props;
         return (
-            <Fragment>
+            <>
                 <ModalContentWrapper
                     closeModalHandler={closeModalHandler}
                     title="New filter subscription"
@@ -190,7 +193,7 @@ class AddCustomModal extends Component {
                         </div>
                     </div>
                     <div className="modal__row modal__row--info">
-                        Trusted filters can use powerful filtering rules modifiers which can be dangerous in the wrong hands. Do not check this box unless you fully trust it.
+                        {i18n.translate('options_popup_trusted_filter_description')}
                     </div>
                     <button
                         type="button"
@@ -200,14 +203,14 @@ class AddCustomModal extends Component {
                         Subscribe
                     </button>
                 </ModalContentWrapper>
-            </Fragment>
+            </>
         );
     };
 
     renderCheckingStep = () => {
         const { closeModalHandler } = this.props;
         return (
-            <Fragment>
+            <>
                 <ModalContentWrapper closeModalHandler={closeModalHandler}>
                     <div className="modal__content modal__content--center-text">
                         <div className="modal__desc">
@@ -215,7 +218,7 @@ class AddCustomModal extends Component {
                         </div>
                     </div>
                 </ModalContentWrapper>
-            </Fragment>
+            </>
         );
     };
 
@@ -227,7 +230,7 @@ class AddCustomModal extends Component {
     renderErrorStep = () => {
         const { closeModalHandler } = this.props;
         return (
-            <Fragment>
+            <>
                 <ModalContentWrapper closeModalHandler={closeModalHandler}>
                     <div className="modal__content modal__content--center-text">
                         <div className="modal__subtitle">
@@ -245,7 +248,7 @@ class AddCustomModal extends Component {
                         Try again
                     </button>
                 </ModalContentWrapper>
-            </Fragment>
+            </>
         );
     };
 

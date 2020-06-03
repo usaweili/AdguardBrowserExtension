@@ -1,83 +1,12 @@
-import React, {Fragment, useContext} from 'react';
-import {observer} from 'mobx-react';
+import React, { useContext } from 'react';
+import { observer } from 'mobx-react';
 import SettingsSection from '../Settings/SettingsSection';
 import SettingsSet from '../Settings/SettingsSet';
-import Setting from '../Settings/Setting';
+import Setting, {SETTINGS_TYPES} from '../Settings/Setting';
 import messenger from '../../../../services/messenger';
 import rootStore from "../../stores";
-import log from "../../../../services/log.js";
-import i18n from "../../../../services/i18n";
-
-const MISCELLANEOUS_META = {
-    sets: {
-        useOptimizedFilters: {
-            id: 'useOptimizedFilters',
-            title: i18n.translate('options_use_optimized_filters'),
-            description: i18n.translate('options_use_optimized_filters_desc'),
-            settings: ['useOptimizedFilters'],
-        },
-        integrationModeCheckbox: {
-            id: 'integrationModeCheckbox',
-            title: i18n.translate('options_disable_integration_mode'),
-            description: i18n.translate('options_learn_more'),
-            settings: ['integrationModeCheckbox'],
-        },
-        enableHitsCount: {
-            id: 'enableHitsCount',
-            title: i18n.translate('options_collect_hit_stats'),
-            description: i18n.translate('options_learn_more'),
-            settings: ['enableHitsCount'],
-        },
-        enableShowContextMenu: {
-            id: 'enableShowContextMenu',
-            title: i18n.translate('options_show_context_menu'),
-            settings: ['enableShowContextMenu'],
-        },
-        showInfoAboutAdguardFullVersion: {
-            id: 'showInfoAboutAdguardFullVersion',
-            title: i18n.translate('options_show_adguard_full_version'),
-            settings: ['showInfoAboutAdguardFullVersion'],
-        },
-        showAppUpdatedNotification: {
-            id: 'showAppUpdatedNotification',
-            title: i18n.translate('options_show_app_updated_notification'),
-            settings: ['showAppUpdatedNotification'],
-        },
-    },
-    settings: {
-        useOptimizedFilters: {
-            id: 'use-optimized-filters',
-            type: 'checkbox',
-            inverted: false,
-        },
-        integrationModeCheckbox: {
-            id: 'integration-mode-disabled',
-            type: 'checkbox',
-            inverted: true
-        },
-        enableHitsCount: {
-            id: 'hits-count-disabled',
-            type: 'checkbox',
-            inverted: true
-        },
-        enableShowContextMenu: {
-            id: 'context-menu-disabled',
-            type: 'checkbox',
-            inverted: true
-        },
-        showInfoAboutAdguardFullVersion: {
-            id: 'show-info-about-adguard-disabled',
-            type: 'checkbox',
-            inverted: true
-        },
-        showAppUpdatedNotification: {
-            id: 'show-app-updated-disabled',
-            type: 'checkbox',
-            inverted: true
-        },
-    },
-};
-
+import log from '../../../../services/log.js';
+import i18n from '../../../../services/i18n';
 
 const Miscellaneous = observer(() => {
     const {settingsStore} = useContext(rootStore);
@@ -87,55 +16,14 @@ const Miscellaneous = observer(() => {
         return null;
     }
 
-    const settingChangeHandler = async ({id, data}) => {
+    // eslint-disable-next-line max-len
+    const INTEGRATION_MODE_LEARN_MORE_URL = 'https://adguard.com/forward.html?action=integration_mode_kb&from=options_screen&app=browser_extension';
+    // eslint-disable-next-line max-len
+    const COLLECT_HITS_LEARN_MORE_URL = 'https://adguard.com/forward.html?action=filter_rules&from=options_screen&app=browser_extension';
+
+    const settingChangeHandler = async ({ id, data }) => {
         log.info(`Setting ${id} set to ${data}`);
         await settingsStore.updateSetting(id, data);
-    };
-
-    const renderSettings = (settingsIds) => {
-        const settingsMeta = settingsIds.map(settingId => MISCELLANEOUS_META.settings[settingId]);
-        const enrichedSettings = settingsMeta.map(settingMeta => {
-            const settingData = settings.values[settingMeta.id];
-            return {
-                ...settingMeta,
-                value: settingData
-            };
-        });
-
-        return enrichedSettings.map(setting => (
-            <Setting
-                key={setting.id}
-                id={setting.id}
-                type={setting.type}
-                value={setting.value}
-                inverted={setting.inverted}
-                handler={settingChangeHandler}
-            />
-        ));
-    };
-
-    const renderSets = () => {
-        const setsOrder = [
-            'useOptimizedFilters',
-            'integrationModeCheckbox',
-            'enableHitsCount',
-            'enableShowContextMenu',
-            'showInfoAboutAdguardFullVersion',
-            'showAppUpdatedNotification',
-        ];
-        const sets = setsOrder.map(setId => MISCELLANEOUS_META.sets[setId]);
-        return sets.map(set => {
-            const inverted = MISCELLANEOUS_META.settings[set.id].inverted;
-            const disabled = !settings.values[MISCELLANEOUS_META.settings[set.id].id];
-            return (
-                <SettingsSet
-                    key={set.id}
-                    {...set}
-                    disabled={inverted ? !disabled : disabled}
-                >
-                    {renderSettings(set.settings)}
-                </SettingsSet>
-        )});
     };
 
     const handleFilteringLogClick = async () => {
@@ -151,15 +39,116 @@ const Miscellaneous = observer(() => {
         window.open('https://github.com/AdguardTeam/AdguardBrowserExtension/releases', '_blank');
     };
 
+    const {
+        USE_OPTIMIZED_FILTERS,
+        DISABLE_INTEGRATION_MODE,
+        DISABLE_COLLECT_HITS,
+        DISABLE_SHOW_CONTEXT_MENU,
+        DISABLE_SHOW_ADGUARD_PROMO_INFO,
+        DISABLE_SHOW_APP_UPDATED_NOTIFICATION,
+    } = settings.names;
+
     return (
-        <Fragment>
+        <>
             <h2 className="title">Miscellaneous</h2>
-            {settings
-            && (
-                <SettingsSection>
-                    {renderSets()}
-                </SettingsSection>
-            )}
+            <SettingsSection>
+                <SettingsSet
+                    title={i18n.translate('options_use_optimized_filters')}
+                    description={i18n.translate('options_use_optimized_filters_desc')}
+                    disabled={!settings.values[USE_OPTIMIZED_FILTERS]}
+                >
+                    <Setting
+                        id={USE_OPTIMIZED_FILTERS}
+                        type={SETTINGS_TYPES.CHECKBOX}
+                        value={settings.values[USE_OPTIMIZED_FILTERS]}
+                        handler={settingChangeHandler}
+                    />
+                </SettingsSet>
+
+                <SettingsSet
+                    title={i18n.translate('options_disable_integration_mode')}
+                    description={(
+                        <a
+                            href={INTEGRATION_MODE_LEARN_MORE_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {i18n.translate('options_learn_more')}
+                        </a>
+                    )}
+
+                    disabled={settings.values[DISABLE_INTEGRATION_MODE]}
+                >
+                    <Setting
+                        id={DISABLE_INTEGRATION_MODE}
+                        type={SETTINGS_TYPES.CHECKBOX}
+                        inverted
+                        value={settings.values[DISABLE_INTEGRATION_MODE]}
+                        handler={settingChangeHandler}
+                    />
+                </SettingsSet>
+
+                <SettingsSet
+                    title={i18n.translate('options_collect_hit_stats')}
+                    description={(
+                        <a
+                            href={COLLECT_HITS_LEARN_MORE_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {i18n.translate('options_learn_more')}
+                        </a>
+                    )}
+                    disabled={settings.values[DISABLE_COLLECT_HITS]}
+                >
+                    <Setting
+                        id={DISABLE_COLLECT_HITS}
+                        type={SETTINGS_TYPES.CHECKBOX}
+                        inverted
+                        value={settings.values[DISABLE_COLLECT_HITS]}
+                        handler={settingChangeHandler}
+                    />
+                </SettingsSet>
+
+                <SettingsSet
+                    title={i18n.translate('options_show_context_menu')}
+                    disabled={settings.values[DISABLE_SHOW_CONTEXT_MENU]}
+                >
+                    <Setting
+                        id={DISABLE_SHOW_CONTEXT_MENU}
+                        type={SETTINGS_TYPES.CHECKBOX}
+                        inverted
+                        value={settings.values[DISABLE_SHOW_CONTEXT_MENU]}
+                        handler={settingChangeHandler}
+                    />
+                </SettingsSet>
+
+                <SettingsSet
+                    title={i18n.translate('options_show_adguard_full_version')}
+                    disabled={settings.values[DISABLE_SHOW_ADGUARD_PROMO_INFO]}
+                >
+                    <Setting
+                        id={DISABLE_SHOW_ADGUARD_PROMO_INFO}
+                        type={SETTINGS_TYPES.CHECKBOX}
+                        inverted
+                        value={settings.values[DISABLE_SHOW_ADGUARD_PROMO_INFO]}
+                        handler={settingChangeHandler}
+                    />
+                </SettingsSet>
+
+                <SettingsSet
+                    title={i18n.translate('options_show_app_updated_notification')}
+                    disabled={settings.values[DISABLE_SHOW_APP_UPDATED_NOTIFICATION]}
+                >
+                    <Setting
+                        id={DISABLE_SHOW_APP_UPDATED_NOTIFICATION}
+                        type={SETTINGS_TYPES.CHECKBOX}
+                        inverted
+                        value={settings.values[DISABLE_SHOW_APP_UPDATED_NOTIFICATION]}
+                        handler={settingChangeHandler}
+                    />
+                </SettingsSet>
+            </SettingsSection>
             <button
                 type="button"
                 className="button button--m button--green content__btn"
@@ -181,7 +170,7 @@ const Miscellaneous = observer(() => {
             >
                 Changelog
             </button>
-        </Fragment>
+        </>
     );
 });
 

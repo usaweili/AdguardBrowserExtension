@@ -2,11 +2,13 @@ import React from 'react';
 import Checkbox from './Checkbox';
 import Select from './Select';
 import TextInput from './TextInput';
+import Textarea from './Textarea';
 
 export const SETTINGS_TYPES = {
     CHECKBOX: 'checkbox',
     SELECT: 'select',
     INPUT: 'input',
+    TEXTAREA: 'textarea',
 };
 
 export default function Setting(props) {
@@ -42,6 +44,16 @@ export default function Setting(props) {
             const { id, value, handler } = props;
             return (
                 <TextInput
+                    id={id}
+                    value={value}
+                    handler={handler}
+                />
+            );
+        }
+        case SETTINGS_TYPES.TEXTAREA: {
+            const { id, value, handler } = props;
+            return (
+                <Textarea
                     id={id}
                     value={value}
                     handler={handler}

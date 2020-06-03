@@ -1,14 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './settings.pcss';
+import classNames from 'classnames';
 
 function SettingsSection(props) {
     const { title, children, disabled } = props;
+    const settingGroupClassName = classNames({
+        'settings__group': true,
+        'settings__group--disabled': disabled,
+    });
     return (
         <div key={title}>
             <div
-                className="settings-group"
-                disabled={disabled}
+                className={settingGroupClassName}
             >
                 {title && <h3 className="subtitle">{title}</h3>}
                 {children}
@@ -24,7 +27,10 @@ SettingsSection.defaultProps = {
 
 SettingsSection.propTypes = {
     title: PropTypes.string,
-    children: PropTypes.arrayOf(PropTypes.node).isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.arrayOf(PropTypes.node)
+    ]).isRequired,
 };
 
 export default SettingsSection;

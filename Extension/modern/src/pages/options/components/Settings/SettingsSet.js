@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './settings.pcss';
+import classNames from 'classnames';
 
 const SettingsSet = (props) => {
     const { title, description, children, disabled } = props;
-    const settingInfoClassName = `setting__info${disabled ? ' disabled': ''}`;
+    const settingClassName = classNames({
+        'setting': true,
+        'setting--disabled': disabled,
+    });
     return (
-        <div className="setting">
-            <div className={settingInfoClassName}>
+        <div className={settingClassName}>
+            <div className="setting__info">
                 <div className="setting__title">
                     {title}
                 </div>

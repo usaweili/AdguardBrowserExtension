@@ -43,6 +43,7 @@
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "checksum": "^0.1.1",
+    "classnames": "^2.2.6",
     "crx": "^5.0.1",
     "css-loader": "^3.5.2",
     "del": "^4.1.0",

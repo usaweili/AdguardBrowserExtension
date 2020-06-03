@@ -1,0 +1,33 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import './textarea.pcss';
+
+function Textarea(props) {
+    const {
+        id, value, handler,
+    } = props;
+
+    const changeHandler = (e) => {
+        const { target: { name: id, value: data } } = e;
+        handler({ id, data });
+    };
+
+    return (
+        <textarea
+            name={id}
+            onChange={changeHandler}
+            id={id}
+            className="textarea"
+        >
+            {value}
+        </textarea>
+    );
+}
+
+Textarea.propTypes = {
+    id: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
+    handler: PropTypes.func.isRequired,
+};
+
+export default Textarea;

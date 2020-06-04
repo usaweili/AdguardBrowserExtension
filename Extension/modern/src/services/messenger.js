@@ -46,6 +46,18 @@ class Messenger {
     const type = 'applySettingsJson';
     return this.sendMessage(type, { json });
   }
+
+  async openFilteringLog() {
+    // TODO use common message types in the constants
+    const type = 'openFilteringLog';
+    return this.sendMessage(type);
+  }
+
+  async resetStatistics() {
+    // TODO use common message types in the constants
+    const type = 'resetBlockedAdsCount';
+    return this.sendMessage(type);
+  }
 }
 
 const messenger = new Messenger();

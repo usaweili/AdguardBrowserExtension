@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import rootStore from '../../stores';
 
-const Notification = (props) => {
+export const Notification = (props) => {
     const { id, title, description } = props;
 
     const { uiStore } = useContext(rootStore);
@@ -29,5 +29,3 @@ Notification.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
 };
-
-export default Notification;

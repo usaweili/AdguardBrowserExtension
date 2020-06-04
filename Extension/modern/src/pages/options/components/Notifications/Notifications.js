@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 import rootStore from '../../stores';
-import Notification from './Notification';
+import { Notification } from './Notification';
 
 import './notifications.pcss';
 
-const Notifications = observer(() => {
+export const Notifications = observer(() => {
     const { uiStore } = useContext(rootStore);
 
     const { notifications } = uiStore;
@@ -31,5 +31,3 @@ const Notifications = observer(() => {
         </div>
     );
 });
-
-export default Notifications;

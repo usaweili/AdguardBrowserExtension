@@ -13,8 +13,8 @@ document.title = i18n.translate('options_settings');
 //  2. all components should be functional
 //  3. remove legacy options page, and associated files
 ReactDOM.render(
-  <Provider>
-    <App />
-  </Provider>,
-  document.getElementById('root'),
+    <Provider>
+        <App />
+    </Provider>,
+    document.getElementById('root'),
 );

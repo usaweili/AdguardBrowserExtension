@@ -8,10 +8,10 @@ import UiStore from './UiStore';
 configure({ enforceActions: 'observed' });
 
 class RootStore {
-  constructor() {
-    this.settingsStore = new SettingsStore(this);
-    this.uiStore = new UiStore(this);
-  }
+    constructor() {
+        this.settingsStore = new SettingsStore(this);
+        this.uiStore = new UiStore(this);
+    }
 }
 
 export default createContext(new RootStore());

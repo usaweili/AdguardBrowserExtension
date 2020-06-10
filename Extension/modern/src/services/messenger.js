@@ -65,6 +65,25 @@ class Messenger {
         const type = 'resetBlockedAdsCount';
         return this.sendMessage(type);
     }
+
+    async updateFilters() {
+        // TODO use common message types in the constants
+        const type = 'checkAntiBannerFiltersUpdate';
+        return this.sendMessage(type);
+    }
+
+    async updateGroupStatus(id, data) {
+        // TODO use common message types in the constants
+        const type = data ? 'enableFiltersGroupModern' : 'disableFiltersGroupModern';
+        const groupId = id - 0;
+        await this.sendMessage(type, { groupId });
+    }
+
+    async updateFilterStatus(filterId, data) {
+        // TODO use common message types in constants;
+        const type = data ? 'addAndEnableFilterModern' : 'disableAntiBannerFilterModern';
+        await this.sendMessage(type, { filterId });
+    }
 }
 
 const messenger = new Messenger();

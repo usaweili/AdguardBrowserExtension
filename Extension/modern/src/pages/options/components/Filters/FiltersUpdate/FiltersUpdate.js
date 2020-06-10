@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './filters-update.pcss';
 
-function FiltersUpdate(props) {
+const FiltersUpdate = (props) => {
     const {
         handler,
         rulesCount,
@@ -45,7 +45,7 @@ FiltersUpdate.propTypes = {
     handler: PropTypes.func.isRequired,
     rulesCount: PropTypes.number,
     buttonClass: PropTypes.string.isRequired,
-    lastUpdateDate: PropTypes.string,
+    lastUpdateDate: PropTypes.number,
 };
 
 export default FiltersUpdate;

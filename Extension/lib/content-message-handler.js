@@ -102,6 +102,7 @@
             settings: adguard.settings.getAllSettings(),
             appVersion: adguard.app.getVersion(),
             filtersMetadata: adguard.categories.getFiltersMetadata(),
+            filtersStats: adguard.requestFilter.getRequestFilterInfo(),
             constants: {
                 AntiBannerFiltersId: adguard.utils.filters.ids,
             },
@@ -186,8 +187,14 @@
             case 'enableFiltersGroup':
                 adguard.categories.enableFiltersGroup(message.groupId);
                 break;
+            case 'enableFiltersGroupModern':
+                adguard.categories.enableFiltersGroup(message.data.groupId);
+                break;
             case 'disableFiltersGroup':
                 adguard.categories.disableFiltersGroup(message.groupId);
+                break;
+            case 'disableFiltersGroupModern':
+                adguard.categories.disableFiltersGroup(message.data.groupId);
                 break;
             case 'changeDefaultWhiteListMode':
                 adguard.whitelist.changeDefaultWhiteListMode(message.enabled);

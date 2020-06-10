@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './checkbox.pcss';
 
-function Checkbox(props) {
+const Checkbox = (props) => {
     const {
         id, handler, inverted,
     } = props;
@@ -35,7 +35,7 @@ function Checkbox(props) {
             />
         </div>
     );
-}
+};
 
 Checkbox.defaultProps = {
     value: false,

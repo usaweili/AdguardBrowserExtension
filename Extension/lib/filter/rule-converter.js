@@ -241,7 +241,7 @@
 
         const uboMarkers = Object.keys(UBO_CSS_RULE_MARKERS).map(key => UBO_CSS_RULE_MARKERS[key]);
 
-        const mask = api.FilterRule.findRuleMarker(
+        let mask = api.FilterRule.findRuleMarker(
             ruleText,
             uboMarkers,
             RULE_MARKER_FIRST_CHAR
@@ -263,6 +263,20 @@
         if (convertedCssContent === cssContent) {
             throw new Error(`Empty :style pseudo class: ${cssContent}`);
         }
+
+        // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1702
+        const EXT_CSS_MARKERS = api.CssFilterRule.EXTENDED_CSS_MARKERS;
+        let isExtendedCss = false;
+        for (let i = 0; i < EXT_CSS_MARKERS.length; i += 1) {
+            isExtendedCss = ruleText.indexOf(EXT_CSS_MARKERS[i]) !== -1;
+            if (isExtendedCss) {
+                break;
+            }
+        }
+        if (isExtendedCss) {
+            mask = mask.indexOf('@') !== -1 ? '#@?#' : '#?#';
+        }
+
         return domainsPart + CSS_TO_INJECT_PAIRS[mask] + convertedCssContent;
     }
 

@@ -281,6 +281,14 @@ QUnit.test('Ublock Css Injection Syntax Support', (assert) => {
     assert.equal(cssFilterRule.ruleText, ruleText);
     assert.equal(cssFilterRule.convertedRuleText, 'example.com#$#a[target="_blank"][href^="http://api.taboola.com/"] { display: none; }');
     assert.equal(cssFilterRule.cssSelector, 'a[target="_blank"][href^="http://api.taboola.com/"] { display: none; }');
+
+    ruleText = "example.org##p:has-text(/[\\w\\W]{30,}/):style(background: #ff0033!important;)";
+    cssFilterRule = adguard.rules.builder.createRule(ruleText, 0);
+    assert.equal(cssFilterRule.ruleText, ruleText);
+    assert.equal(cssFilterRule.convertedRuleText, 'example.org#$?#p:has-text(/[\\w\\W]{30,}/) { background: #ff0033!important; }');
+    assert.ok(cssFilterRule.isInjectRule);
+    assert.notOk(cssFilterRule.whiteListRule);
+    assert.equal(cssFilterRule.cssSelector, "p:has-text(/[\\w\\W]{30,}/) { background: #ff0033!important; }");
 });
 
 QUnit.test('Some Complex Selector Rules', (assert) => {

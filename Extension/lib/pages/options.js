@@ -1778,7 +1778,9 @@ const Settings = function () {
         const input = document.querySelector(selector);
         if (input) {
             input.value = values[settingKey];
-            input.setAttribute('placeholder', defaultValue);
+            const placeholderI18nKey = input.getAttribute('i18n');
+            const placeholder = i18n.getMessage(placeholderI18nKey);
+            input.setAttribute('placeholder', placeholder);
             input.addEventListener('keyup', Utils.debounce(() => {
                 contentPage.sendMessage({
                     type: 'changeUserSetting',
@@ -1791,6 +1793,9 @@ const Settings = function () {
 
     const trackingParametersInput = document.querySelector('#strip_tracking_params_input');
     trackingParametersInput.value = userSettings.values[userSettings.names.TRACKING_PARAMETERS];
+    const placeholderI18nKey = trackingParametersInput.getAttribute('i18n');
+    const placeholder = i18n.getMessage(placeholderI18nKey);
+    trackingParametersInput.setAttribute('placeholder', placeholder);
     if (trackingParametersInput) {
         trackingParametersInput.addEventListener('keyup', Utils.debounce((e) => {
             contentPage.sendMessage({
